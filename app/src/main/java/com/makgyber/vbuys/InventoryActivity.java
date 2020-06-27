@@ -51,7 +51,10 @@ public class InventoryActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.inventory_add) {
-
+            Intent intent = new Intent(InventoryActivity.this, InventoryDetailActivity.class);
+            intent.putExtra("PRODUCT_ID", "0");
+            startActivity(intent);
+            finish();
             return true;
         }
 

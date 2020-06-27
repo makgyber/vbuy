@@ -4,10 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 
 public class InventoryDetailActivity extends AppCompatActivity {
 
-    String productId;
+    String productId = "";
     String TAG = "InventoryDetailActivity";
 
     @Override
@@ -16,7 +17,15 @@ public class InventoryDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory_detail);
         getSupportActionBar().setTitle("Inventory Details");
 
-        String productId = getIntent().getExtras().get("PRODUCT_ID").toString();
-        Log.d(TAG, "onCreate: " + productId);
+        if (getIntent().hasExtra("PRODUCT_ID")) {
+            productId = getIntent().getExtras().get("PRODUCT_ID").toString();
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.inventory_add_menu, menu);
+        return true;
     }
 }
