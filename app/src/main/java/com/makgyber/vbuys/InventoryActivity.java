@@ -1,5 +1,6 @@
 package com.makgyber.vbuys;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,8 +15,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -61,7 +64,15 @@ public class InventoryActivity extends AppCompatActivity {
                 .whereEqualTo("tindahanId", "tindahan" + mAuth.getCurrentUser().getUid());
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(query, Product.class)
+                .setQuery(query, new SnapshotParser<Product>() {
+                    @NonNull
+                    @Override
+                    public Product parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                        Product product = snapshot.toObject(Product.class);
+                        product.setId( snapshot.getId() );
+                        return product;
+                    }
+                })
                 .build();
 
         adapter = new ProductAdapter(options);

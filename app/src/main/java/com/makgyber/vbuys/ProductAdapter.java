@@ -1,5 +1,7 @@
 package com.makgyber.vbuys;
 
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +20,24 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ProductHolder holder, int position, @NonNull Product model) {
+    protected void onBindViewHolder(@NonNull ProductHolder holder, final int position, @NonNull final Product model) {
+        Log.d("TAG", "onBindViewHolder: " + model.getId());
+
         holder.textViewProductName.setText(model.getProductName());
         holder.textViewProductDescription.setText(model.getDescription());
         holder.textViewProductPrice.setText(Double.toString(model.getPrice()));
         holder.textViewTindahan.setText(model.getTindahanName());
+        holder.productId = model.getId();
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String product_id = model.getId();
+                Intent intent = new Intent(v.getContext(), InventoryDetailActivity.class );
+                intent.putExtra("PRODUCT_ID", product_id);
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     @NonNull
@@ -37,8 +52,9 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         TextView textViewProductDescription;
         TextView textViewProductPrice;
         TextView textViewTindahan;
+        String productId;
 
-        public ProductHolder(@NonNull View itemView) {
+        public ProductHolder(@NonNull final View itemView) {
             super(itemView);
             textViewProductName = itemView.findViewById(R.id.txt_product_name);
             textViewProductDescription = itemView.findViewById(R.id.txt_product_description);
