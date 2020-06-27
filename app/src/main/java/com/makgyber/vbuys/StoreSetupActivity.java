@@ -43,6 +43,7 @@ public class StoreSetupActivity extends AppCompatActivity {
 
     TextView mWelcome, mNameHelp, mAddressHelp, mContactInfoHelp, mServiceAreaHelp;
     EditText mTindahanName, mTindahanId, mOwner, mAddress, mContactInfo, mServiceArea;
+    Boolean storeExists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,7 @@ public class StoreSetupActivity extends AppCompatActivity {
                         mContactInfo.setText(document.get("contactInfo").toString());
                         String sArea = document.get("serviceArea").toString();
                         mServiceArea.setText(sArea.replace("[", "").replace("]",""));
+                        storeExists = true;
                     }
                 }
             }
@@ -115,13 +117,13 @@ public class StoreSetupActivity extends AppCompatActivity {
 
         if (id == R.id.action_inventory) {
 
-            if (mTindahanName.toString().equalsIgnoreCase("")) {
+            if (storeExists) {
+                startActivity(new Intent(StoreSetupActivity.this, InventoryActivity.class));
+            } else {
                 AlertDialog.Builder builder= new AlertDialog.Builder(StoreSetupActivity.this);
                 builder.setMessage("Please save your store profile first");
                 AlertDialog alert = builder.create();
                 alert.show();
-            } else {
-                startActivity(new Intent(StoreSetupActivity.this, InventoryActivity.class));
             }
 
             return true;
@@ -146,6 +148,7 @@ public class StoreSetupActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(StoreSetupActivity.this, "Tindahan saved", Toast.LENGTH_SHORT).show();
+                    storeExists = true;
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
