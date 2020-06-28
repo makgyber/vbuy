@@ -4,19 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -44,7 +39,7 @@ public class StoreSetupActivity extends AppCompatActivity {
     CollectionReference dbRef = db.collection(COLLECTION);
 
     TextView mWelcome, mNameHelp, mAddressHelp, mContactInfoHelp, mServiceAreaHelp;
-    EditText mTindahanName, mTindahanId, mOwner, mAddress, mContactInfo, mServiceArea;
+    TextInputEditText mTindahanName, mTindahanId, mOwner, mAddress, mContactInfo, mServiceArea, mDeliveryOptions, mPaymentOptions;
     Boolean storeExists = false;
 
     @Override
@@ -52,12 +47,13 @@ public class StoreSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_setup);
         getSupportActionBar().setTitle("Store Setup");
-        mTindahanName = (EditText) findViewById(R.id.txt_tindahan_name);
-        mAddress = (EditText) findViewById(R.id.txt_address);
-        mContactInfo = (EditText) findViewById(R.id.txt_contact_info);
-        mServiceArea = (EditText) findViewById(R.id.txt_service_area);
+        mTindahanName = (TextInputEditText) findViewById(R.id.txt_tindahan_name);
+        mAddress = (TextInputEditText) findViewById(R.id.txt_address);
+        mContactInfo = (TextInputEditText) findViewById(R.id.txt_contact_info);
+        mServiceArea = (TextInputEditText) findViewById(R.id.txt_service_area);
+        mDeliveryOptions = (TextInputEditText) findViewById(R.id.txt_delivery_mode);
+        mPaymentOptions = (TextInputEditText) findViewById(R.id.txt_payment_options);
 
-//        generateLabels();
         populateTindahanView();
     }
 
@@ -68,23 +64,9 @@ public class StoreSetupActivity extends AppCompatActivity {
         return true;
     }
 
-    private void generateLabels() {
-//        mWelcome = (TextView) findViewById(R.id.txt_tindahan_welcome);
-//        mNameHelp = (TextView) findViewById(R.id.txt_tindahan_name_help);
-//        mAddressHelp = (TextView) findViewById(R.id.txt_address_help);
-//        mContactInfoHelp = (TextView) findViewById(R.id.txt_contact_info_help);
-//        mServiceAreaHelp = (TextView) findViewById(R.id.txt_service_area_help);
-//
-//        mWelcome.setText(Html.fromHtml(mWelcome.getText().toString()));
-//        mNameHelp.setText(Html.fromHtml(mNameHelp.getText().toString()));
-//        mAddressHelp.setText(Html.fromHtml(mAddressHelp.getText().toString()));
-//        mContactInfoHelp.setText(Html.fromHtml(mContactInfoHelp.getText().toString()));
-//        mServiceAreaHelp.setText(Html.fromHtml(mServiceAreaHelp.getText().toString()));
-    }
-
     private void populateTindahanView() {
 
-        DocumentReference docRef = db.collection(COLLECTION).document(COLLECTION + mUser.getUid());
+        final DocumentReference docRef = db.collection(COLLECTION).document(COLLECTION + mUser.getUid());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -95,6 +77,10 @@ public class StoreSetupActivity extends AppCompatActivity {
                         mAddress.setText(document.get("address").toString());
                         mContactInfo.setText(document.get("contactInfo").toString());
                         String sArea = document.get("serviceArea").toString();
+                        if (document.get("deliveryOptions") != null)
+                            mDeliveryOptions.setText(document.get("deliveryOptions").toString());
+                        if (document.get("paymentOptions") != null)
+                            mPaymentOptions.setText(document.get("paymentOptions").toString());
                         mServiceArea.setText(sArea.replace("[", "").replace("]",""));
                         storeExists = true;
                         saveToSharedPreferences();
@@ -140,11 +126,13 @@ public class StoreSetupActivity extends AppCompatActivity {
         String address = mAddress.getText().toString();
         String contactInfo = mContactInfo.getText().toString();
         String serviceArea = mServiceArea.getText().toString();
+        String paymentOptions = mPaymentOptions.getText().toString();
+        String deliveryOptions = mDeliveryOptions.getText().toString();
         String owner = mUser.getUid();
         String tindahanId = COLLECTION + owner;
 
         final Tindahan tindahan = new Tindahan(tindahanId, tindahanName, owner, contactInfo, address,
-                true, new ArrayList<String>(Arrays.asList(serviceArea.split(","))));
+                paymentOptions, deliveryOptions, true, new ArrayList<String>(Arrays.asList(serviceArea.split(","))));
 
         dbRef.document(tindahanId).set(tindahan)
             .addOnSuccessListener(new OnSuccessListener<Void>() {

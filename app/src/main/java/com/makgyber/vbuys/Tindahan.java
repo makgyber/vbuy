@@ -8,6 +8,8 @@ public class Tindahan {
     private String owner;
     private String contactInfo;
     private String address;
+    private String paymentOptions;
+    private String deliveryOptions;
     private Boolean publish;
     private ArrayList<String> serviceArea;
 
@@ -16,12 +18,14 @@ public class Tindahan {
         //need empty constructor
     }
 
-    public Tindahan(String tindahanId, String tindahanName, String owner, String contactInfo, String address, Boolean publish, ArrayList<String> serviceArea) {
+    public Tindahan(String tindahanId, String tindahanName, String owner, String contactInfo, String address, String paymentOptions, String deliveryOptions, Boolean publish, ArrayList<String> serviceArea) {
         this.tindahanId = tindahanId;
         this.tindahanName = tindahanName;
         this.owner = owner;
         this.contactInfo = contactInfo;
         this.address = address;
+        this.paymentOptions = paymentOptions;
+        this.deliveryOptions = deliveryOptions;
         this.publish = publish;
         this.serviceArea = serviceArea;
     }
@@ -54,4 +58,11 @@ public class Tindahan {
         return serviceArea;
     }
 
+    public String getPaymentOptions() {
+        return paymentOptions;
+    }
+
+    public String getDeliveryOptions() {
+        return deliveryOptions;
+    }
 }
