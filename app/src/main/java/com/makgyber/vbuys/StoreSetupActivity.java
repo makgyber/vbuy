@@ -7,8 +7,10 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +57,7 @@ public class StoreSetupActivity extends AppCompatActivity {
         mContactInfo = (EditText) findViewById(R.id.txt_contact_info);
         mServiceArea = (EditText) findViewById(R.id.txt_service_area);
 
-        generateLabels();
+//        generateLabels();
         populateTindahanView();
     }
 
@@ -67,17 +69,17 @@ public class StoreSetupActivity extends AppCompatActivity {
     }
 
     private void generateLabels() {
-        mWelcome = (TextView) findViewById(R.id.txt_tindahan_welcome);
-        mNameHelp = (TextView) findViewById(R.id.txt_tindahan_name_help);
-        mAddressHelp = (TextView) findViewById(R.id.txt_address_help);
-        mContactInfoHelp = (TextView) findViewById(R.id.txt_contact_info_help);
-        mServiceAreaHelp = (TextView) findViewById(R.id.txt_service_area_help);
-
-        mWelcome.setText(Html.fromHtml(mWelcome.getText().toString()));
-        mNameHelp.setText(Html.fromHtml(mNameHelp.getText().toString()));
-        mAddressHelp.setText(Html.fromHtml(mAddressHelp.getText().toString()));
-        mContactInfoHelp.setText(Html.fromHtml(mContactInfoHelp.getText().toString()));
-        mServiceAreaHelp.setText(Html.fromHtml(mServiceAreaHelp.getText().toString()));
+//        mWelcome = (TextView) findViewById(R.id.txt_tindahan_welcome);
+//        mNameHelp = (TextView) findViewById(R.id.txt_tindahan_name_help);
+//        mAddressHelp = (TextView) findViewById(R.id.txt_address_help);
+//        mContactInfoHelp = (TextView) findViewById(R.id.txt_contact_info_help);
+//        mServiceAreaHelp = (TextView) findViewById(R.id.txt_service_area_help);
+//
+//        mWelcome.setText(Html.fromHtml(mWelcome.getText().toString()));
+//        mNameHelp.setText(Html.fromHtml(mNameHelp.getText().toString()));
+//        mAddressHelp.setText(Html.fromHtml(mAddressHelp.getText().toString()));
+//        mContactInfoHelp.setText(Html.fromHtml(mContactInfoHelp.getText().toString()));
+//        mServiceAreaHelp.setText(Html.fromHtml(mServiceAreaHelp.getText().toString()));
     }
 
     private void populateTindahanView() {
@@ -95,6 +97,7 @@ public class StoreSetupActivity extends AppCompatActivity {
                         String sArea = document.get("serviceArea").toString();
                         mServiceArea.setText(sArea.replace("[", "").replace("]",""));
                         storeExists = true;
+                        saveToSharedPreferences();
                     }
                 }
             }
@@ -140,13 +143,14 @@ public class StoreSetupActivity extends AppCompatActivity {
         String owner = mUser.getUid();
         String tindahanId = COLLECTION + owner;
 
-        Tindahan tindahan = new Tindahan(tindahanId, tindahanName, owner, contactInfo, address,
+        final Tindahan tindahan = new Tindahan(tindahanId, tindahanName, owner, contactInfo, address,
                 true, new ArrayList<String>(Arrays.asList(serviceArea.split(","))));
 
         dbRef.document(tindahanId).set(tindahan)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    saveToSharedPreferences();
                     Toast.makeText(StoreSetupActivity.this, "Tindahan saved", Toast.LENGTH_SHORT).show();
                     storeExists = true;
                 }
@@ -159,4 +163,18 @@ public class StoreSetupActivity extends AppCompatActivity {
             });
     }
 
+    private void saveToSharedPreferences() {
+
+        Log.d("StoreSetupActivity", "saveToSharedPreferences: " + COLLECTION + mUser.getUid());
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("tindahanId", COLLECTION + mUser.getUid());
+        editor.putString("tindahanName", mTindahanName.getText().toString());
+        editor.putString("contactInfo", mContactInfo.getText().toString());
+        editor.putString("serviceArea", mServiceArea.getText().toString());
+
+        editor.commit();
+
+    }
 }

@@ -33,15 +33,8 @@
     <string name="tindahan_contact_info_hint">0999-123-1234, 8877-0000,  mfs@email.com</string>
 
     <string name="tindahan_service_area_help">
-    <![CDATA[
-        <h5>Which areas can you accommodate for deliveries?</h5>
-        <i>Please select only from this list of cities:</i>
-        <br>
-        <pre>
         Caloocan, Malabon, Navotas, Valenzuela, Quezon City, Marikina, Pasig, Taguig,
         Makati, Manila, Mandaluyong, San Juan, Pasay, Parañaque, Las Piñas, and Muntinlupa
-        </pre>
-    ]]>
     </string>
     <string name="tindahan_service_area_hint">Makati, Pasay, Manila</string>
 
