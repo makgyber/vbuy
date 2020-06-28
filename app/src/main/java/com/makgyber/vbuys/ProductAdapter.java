@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.squareup.picasso.Picasso;
 
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
 
@@ -28,6 +30,11 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         holder.textViewProductPrice.setText(Double.toString(model.getPrice()));
         holder.textViewTindahan.setText(model.getTindahanName());
         holder.productId = model.getId();
+        if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
+            Picasso.get().load(model.getImageUri().toString()).resize(100, 100).into(holder.productImage);
+            Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
+        }
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +60,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         TextView textViewProductPrice;
         TextView textViewTindahan;
         String productId;
+        ImageView productImage;
 
         public ProductHolder(@NonNull final View itemView) {
             super(itemView);
@@ -60,6 +68,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             textViewProductDescription = itemView.findViewById(R.id.txt_product_description);
             textViewProductPrice = itemView.findViewById(R.id.txt_product_price);
             textViewTindahan = itemView.findViewById(R.id.txt_tindahan);
+            productImage = itemView.findViewById(R.id.iv_product_image);
         }
     }
 

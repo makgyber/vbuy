@@ -12,12 +12,13 @@ public class Product {
     private Boolean publish;
     private ArrayList<String> tags;
     private ArrayList<String> serviceArea;
+    private String imageUri;
 
     public Product() {
         //need empty constructor
     }
 
-    public Product(String productName, String description, String tindahanName, String tindahanId, Double price, Boolean publish, ArrayList<String> tags, ArrayList<String> serviceArea) {
+    public Product(String productName, String description, String tindahanName, String tindahanId, Double price, Boolean publish, ArrayList<String> tags, ArrayList<String> serviceArea, String imageUri) {
         this.productName = productName;
         this.description = description;
         this.tindahanName = tindahanName;
@@ -26,6 +27,7 @@ public class Product {
         this.publish = publish;
         this.tags = tags;
         this.serviceArea = serviceArea;
+        this.imageUri = imageUri;
     }
 
     public String getProductName() {
@@ -66,5 +68,13 @@ public class Product {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }

@@ -10,6 +10,15 @@
     android:orientation="vertical"
     tools:context=".InventoryDetailActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,6 +83,21 @@
             android:hint="Tags"
             android:inputType="textMultiLine|textAutoComplete"
             android:singleLine="false" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/product_image"
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_product_image"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
 
