@@ -1,6 +1,6 @@
 package com.makgyber.vbuys;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
     private String id;
@@ -10,15 +10,23 @@ public class Product {
     private String tindahanId;
     private Double price;
     private Boolean publish;
-    private ArrayList<String> tags;
-    private ArrayList<String> serviceArea;
+    private List<String> tags;
+    private List<String> serviceArea;
     private String imageUri;
 
     public Product() {
         //need empty constructor
     }
 
-    public Product(String productName, String description, String tindahanName, String tindahanId, Double price, Boolean publish, ArrayList<String> tags, ArrayList<String> serviceArea, String imageUri) {
+    public Product(String productName,
+                   String description,
+                   String tindahanName,
+                   String tindahanId,
+                   Double price,
+                   Boolean publish,
+                   List<String> tags,
+                   List<String> serviceArea,
+                   String imageUri) {
         this.productName = productName;
         this.description = description;
         this.tindahanName = tindahanName;
@@ -50,11 +58,11 @@ public class Product {
         return publish;
     }
 
-    public ArrayList<String> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public ArrayList<String> getServiceArea() {
+    public List<String> getServiceArea() {
         return serviceArea;
     }
 

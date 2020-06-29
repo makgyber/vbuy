@@ -38,6 +38,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class InventoryDetailActivity extends AppCompatActivity {
     private final static String TINDAHAN = "tindahan";
@@ -231,6 +233,11 @@ public class InventoryDetailActivity extends AppCompatActivity {
 
     private void saveProduct() {
         spinner.setVisibility(View.VISIBLE);
+        List<String> tagsList = Arrays.asList(tags.getText().toString().split(","));
+        tagsList.replaceAll(String::trim);
+        List<String> saList = Arrays.asList(tindahanServiceArea.split(","));
+        saList.replaceAll(String::trim);
+
         Product product = new Product(
                 name.getText().toString(),
                 description.getText().toString(),
@@ -238,8 +245,8 @@ public class InventoryDetailActivity extends AppCompatActivity {
                 tindahanId,
                 Double.parseDouble(price.getText().toString()),
                 true, // TODO: use a switch
-                new ArrayList<String>(Arrays.asList(tags.getText().toString().split(","))),
-                new ArrayList<String>(Arrays.asList(tindahanServiceArea.split(","))),
+                tagsList,
+                saList,
                 "");
 
         Log.d(TAG, "saveProduct: " + product.getProductName());
