@@ -31,7 +31,7 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         holder.textViewTindahan.setText(model.getTindahanName());
         holder.productId = model.getId();
         if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
-            Picasso.get().load(model.getImageUri().toString()).resize(100, 100).into(holder.productImage);
+            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(200,200).into(holder.productImage);
             Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
         }
 
