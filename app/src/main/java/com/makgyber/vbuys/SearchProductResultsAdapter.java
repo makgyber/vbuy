@@ -40,7 +40,7 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
             @Override
             public void onClick(View v) {
                 String product_id = model.getId();
-                Intent intent = new Intent(v.getContext(), InventoryDetailActivity.class );
+                Intent intent = new Intent(v.getContext(), ProductDetailActivity.class );
                 intent.putExtra("PRODUCT_ID", product_id);
                 v.getContext().startActivity(intent);
             }
