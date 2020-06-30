@@ -6,11 +6,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -52,7 +54,7 @@ public class SearchableActivity extends AppCompatActivity {
         sv = (SearchView) menu.findItem(R.id.search).getActionView();
         sv.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         sv.setIconifiedByDefault(false);
-
+        sv.setLayoutParams(new ActionBar.LayoutParams(Gravity.LEFT));
         sv.setQuery(query, false);
         sv.requestFocus();
 

@@ -5,56 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-
     tools:context=".SearchableActivity">
-
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:id="@+id/app_bar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/AppTheme.AppBarOverlay"-->
-<!--        android:gravity="top"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:id="@+id/search_toolbar"-->
-<!--        app:title=""-->
-<!--        android:gravity="center_vertical|start"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="?actionBarSize"-->
-<!--        android:background="#ff994499"-->
-<!--        app:titleTextColor="#FFFFFFFF"-->
-<!--        android:theme="@style/AppTheme"-->
-<!--        app:popupTheme="@style/Theme.AppCompat.Light">-->
-
-<!--        <SearchView-->
-<!--            android:id="@+id/search_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:iconifiedByDefault="false"-->
-<!--            android:focusedByDefault="false"-->
-<!--            android:focusable="true"-->
-<!--            android:queryHint="Search products or services"-->
-<!--            />-->
-<!--    </androidx.appcompat.widget.Toolbar>-->
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
-
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search_product_result"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:scrollbars="vertical"
             app:layout_constraintEnd_toStartOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
-
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

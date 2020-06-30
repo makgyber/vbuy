@@ -31,7 +31,7 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
         holder.textViewTindahan.setText(model.getTindahanName());
         holder.productId = model.getId();
         if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
-            Picasso.get().load(model.getImageUri().toString()).resize(400, 400).into(holder.productImage);
+            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(300,300).into(holder.productImage);
             Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
         }
 

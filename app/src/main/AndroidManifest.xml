@@ -12,14 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SignInActivity"
+        <activity android:name=".ProductDetailActivity"></activity>
+        <activity
+            android:name=".SignInActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".InventoryDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,13 +32,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StoreSetupActivity" />
         </activity>
-
         <activity android:name=".StoreSetupActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".SearchableActivity"
             android:launchMode="singleTop">
