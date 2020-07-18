@@ -122,7 +122,7 @@ public class InventoryDetailActivity extends AppCompatActivity {
                         String tagsStr = document.get("tags").toString();
                         tags.setText(tagsStr.replace("[", "").replace("]",""));
                         if (document.get("imageUri") != null && !document.get("imageUri").toString().isEmpty()) {
-                            Picasso.get().load(document.get("imageUri").toString()).into(productImage);
+                            Picasso.get().load(document.get("imageUri").toString()).centerCrop().resize(400,400).into(productImage);
                         }
 
                     }
@@ -144,7 +144,7 @@ public class InventoryDetailActivity extends AppCompatActivity {
         Bitmap bitmap = ((BitmapDrawable) productImage.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.25), (int)(bitmap.getHeight()*0.25), true);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
         byte[] data = baos.toByteArray();
 
         spinner.setVisibility(View.VISIBLE);

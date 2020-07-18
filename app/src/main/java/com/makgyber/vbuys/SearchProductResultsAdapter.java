@@ -39,9 +39,21 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String product_id = model.getId();
+                String productId = model.getId();
+                String productName = model.getProductName();
+                String productDescription = model.getDescription();
+                String productImageUrl = model.getImageUri();
+                String productPrice = Double.toString(model.getPrice());
+
                 Intent intent = new Intent(v.getContext(), ProductDetailActivity.class );
-                intent.putExtra("PRODUCT_ID", product_id);
+                intent.putExtra("PRODUCT_ID", productId);
+                intent.putExtra("PRODUCT_NAME", productName);
+                intent.putExtra("PRODUCT_DESCRIPTION", productDescription);
+                intent.putExtra("PRODUCT_IMAGE", productImageUrl);
+                intent.putExtra("PRODUCT_PRICE", productPrice);
+                intent.putExtra("PRODUCT_TINDAHAN_ID", model.getTindahanId());
+                intent.putExtra("PRODUCT_TINDAHAN_NAME", model.getTindahanName());
+
                 v.getContext().startActivity(intent);
             }
         });
