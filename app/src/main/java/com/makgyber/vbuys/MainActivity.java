@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference productRef = db.collection("product");
     private ProductAdapter adapter;
     private FirebaseUser user;
+    private ImageView ivHealth, ivFood, ivServices, ivRealty;
+    private SearchView searchView;
+    private SearchManager searchManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +36,52 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
+        setupIconButtons();
+    }
+
+    private void setupIconButtons() {
+        ivServices = findViewById(R.id.iv_services);
+        ivFood = findViewById(R.id.iv_food);
+        ivHealth = findViewById(R.id.iv_health);
+        ivRealty = findViewById(R.id.iv_realty);
+
+        ivFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchManager.triggerSearch("food", getComponentName(), null);
+            }
+        });
+
+        ivHealth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchManager.triggerSearch("health", getComponentName(), null);
+            }
+        });
+
+        ivRealty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchManager.triggerSearch("realty", getComponentName(), null);
+            }
+        });
+
+        ivServices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchManager.triggerSearch("services", getComponentName(), null);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        SearchManager searchManager =
+        searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
+        searchView =
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
