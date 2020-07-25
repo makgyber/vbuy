@@ -131,6 +131,7 @@ public class SignInActivity extends AppCompatActivity {
                         Log.d(TAG, "onComplete: user profile email. " + document.getDocuments().get(0).get("email"));
                         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("userId", document.getDocuments().get(0).getId());
                         editor.putString("email", document.getDocuments().get(0).get("email").toString());
                         editor.putString("displayName", document.getDocuments().get(0).get("displayName").toString());
                         editor.putString("phoneNumber",document.getDocuments().get(0).get("phoneNumber").toString());
@@ -158,7 +159,9 @@ public class SignInActivity extends AppCompatActivity {
                 Log.d(TAG, "onSuccess: we're good, proceed please.");
 
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userId", userRef.getId());
                 editor.putString("email", email);
                 editor.putString("displayName", displayName);
                 editor.putString("phoneNumber",phoneNumber);

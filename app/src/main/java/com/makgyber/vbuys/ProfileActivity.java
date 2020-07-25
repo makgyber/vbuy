@@ -2,11 +2,14 @@ package com.makgyber.vbuys;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -22,12 +25,21 @@ public class ProfileActivity extends AppCompatActivity {
 
     TextView displayName, email, phoneNumber, address;
     ImageView profileImage;
+    FloatingActionButton updateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         populateProfile();
+
+        updateButton = findViewById(R.id.fab_update_profile);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this, UpdateProfileActivity.class));
+            }
+        });
     }
 
     private void populateProfile() {
