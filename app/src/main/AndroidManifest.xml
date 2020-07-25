@@ -12,7 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".ProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".SignInActivity"
             android:theme="@style/NoActionBar">
@@ -37,14 +41,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity android:name=".ProductDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SearchableActivity" />
         </activity>
-
-
         <activity
             android:name=".SearchableActivity"
             android:launchMode="singleTop">

@@ -8,6 +8,8 @@
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
 
+
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="1"
@@ -15,7 +17,12 @@
         android:icon="@drawable/ic_store_white_24dp"
         app:showAsAction="always" />
 
-
+    <item
+        android:id="@+id/action_profile"
+        android:orderInCategory="2"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_profile_white_24dp"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_logout"

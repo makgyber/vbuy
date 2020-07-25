@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".ProductDetailActivity">
 
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="400dp"
-    android:id="@+id/product_detail_image"
-    app:layout_constraintTop_toTopOf="parent"
-    />
+    <ImageView
+        android:id="@+id/product_detail_image"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        app:layout_constraintTop_toTopOf="parent"
+         />
 
     <TextView
         android:layout_width="wrap_content"

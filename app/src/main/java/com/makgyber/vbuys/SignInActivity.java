@@ -5,21 +5,38 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ui.idp.SingleSignInActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.model.Document;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class SignInActivity extends AppCompatActivity {
+
+    private final static String COLLECTION = "user";
+    private static final String TAG = "SignInActivity";
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference userRef = db.collection(COLLECTION);
 
     List<AuthUI.IdpConfig> providers;
 
@@ -40,6 +57,9 @@ public class SignInActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
                     // do nothing
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                    Log.d(TAG, "onCreate: " + user);
+                    getUserDetails();
                     startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     finish();
                 } else {
@@ -78,6 +98,8 @@ public class SignInActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
+                Log.d(TAG, "onActivityResult: " + user);
+                getUserDetails();
                 startActivity(new Intent(SignInActivity.this, MainActivity.class));
                 finish();
             } else {
@@ -91,5 +113,65 @@ public class SignInActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    private void getUserDetails() {
+        Query userQuery = userRef.whereEqualTo("uid", user.getUid());
+        userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot document = task.getResult();
+                    if (document.isEmpty()) {
+                        Log.d(TAG, "onComplete: no user profile yet. add one here.");
+                        initializeUserProfile();
+                    } else {
+                        Log.d(TAG, "onComplete: user profile displayName. " + document.getDocuments().get(0).get("displayName"));
+                        Log.d(TAG, "onComplete: user profile phoneNumber. " + document.getDocuments().get(0).get("phoneNumber"));
+                        Log.d(TAG, "onComplete: user profile email. " + document.getDocuments().get(0).get("email"));
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", document.getDocuments().get(0).get("email").toString());
+                        editor.putString("displayName", document.getDocuments().get(0).get("displayName").toString());
+                        editor.putString("phoneNumber",document.getDocuments().get(0).get("phoneNumber").toString());
+                        editor.putString("address", document.getDocuments().get(0).get("address").toString());
+                        editor.putString("photoUrl", document.getDocuments().get(0).get("photoUrl").toString());
+                        editor.commit();
+                    }
+                }
+            }
+        });
+    }
+
+    private void initializeUserProfile() {
+        String email = user.getEmail().isEmpty() ? "my email" : user.getEmail();
+        String displayName = user.getDisplayName().isEmpty() ? "" : user.getDisplayName();
+        String phoneNumber = user.getPhoneNumber().isEmpty() ? "my phone" : user.getPhoneNumber();
+        String photoUrl = user.getPhotoUrl() == null ? "set email" : user.getPhotoUrl().toString();
+        String address = "my city";
+
+        User newUser = new User(email, phoneNumber, displayName, photoUrl, address, user.getUid());
+
+        userRef.document().set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: we're good, proceed please.");
+
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("email", email);
+                editor.putString("displayName", displayName);
+                editor.putString("phoneNumber",phoneNumber);
+                editor.putString("address", address);
+                editor.putString("photoUrl", photoUrl);
+                editor.commit();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: we have a problem with your identification");
+            }
+        });
     }
 }
