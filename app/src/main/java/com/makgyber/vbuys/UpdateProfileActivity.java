@@ -3,6 +3,7 @@ package com.makgyber.vbuys;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,6 +66,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             public void onSuccess(Void aVoid) {
                 Toast.makeText(UpdateProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
                 saveToSharedPreferences();
+                startActivity(new Intent(UpdateProfileActivity.this, ProfileActivity.class));
             }
         })
         .addOnFailureListener(new OnFailureListener() {
