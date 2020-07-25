@@ -148,7 +148,7 @@ public class SignInActivity extends AppCompatActivity {
         String email = user.getEmail().isEmpty() ? "my email" : user.getEmail();
         String displayName = user.getDisplayName().isEmpty() ? "" : user.getDisplayName();
         String phoneNumber = user.getPhoneNumber().isEmpty() ? "my phone" : user.getPhoneNumber();
-        String photoUrl = user.getPhotoUrl() == null ? "set email" : user.getPhotoUrl().toString();
+        String photoUrl = user.getPhotoUrl() == null ? "" : user.getPhotoUrl().toString();
         String address = "my city";
 
         User newUser = new User(email, phoneNumber, displayName, photoUrl, address, user.getUid());

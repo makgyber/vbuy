@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class UpdateProfileActivity extends AppCompatActivity {
 
@@ -30,6 +32,9 @@ public class UpdateProfileActivity extends AppCompatActivity {
     CollectionReference userDbRef = db.collection(COLLECTION);
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser mUser = mAuth.getCurrentUser();
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
 
     TextInputEditText displayName, phoneNumber, email, address;
     ImageView profileImage;
