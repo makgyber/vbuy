@@ -138,7 +138,7 @@ public class InventoryDetailActivity extends AppCompatActivity {
     }
 
     private void uploadProductImage() {
-        StorageReference productRef = storageRef.child("images/"+tindahanId + "/" + productId + ".jpg");
+        StorageReference productRef = storageRef.child("images/tindahan/"+ tindahanId + "/" + productId + ".jpg");
         productImage.setDrawingCacheEnabled(true);
         productImage.buildDrawingCache();
         Bitmap bitmap = ((BitmapDrawable) productImage.getDrawable()).getBitmap();
@@ -165,7 +165,6 @@ public class InventoryDetailActivity extends AppCompatActivity {
                 Uri downloadUrl = urlTask.getResult();
                 updateProductImageUri(downloadUrl);
                 Log.d(TAG, "onSuccess: DownLoadUrl " + downloadUrl.toString());
-                Toast.makeText(InventoryDetailActivity.this, "File Uploaded" + downloadUrl.toString(), Toast.LENGTH_SHORT).show();
                 spinner.setVisibility(View.GONE);
             }
         });

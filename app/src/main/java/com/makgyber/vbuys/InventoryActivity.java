@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -62,9 +63,10 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void getInventoryList() {
-
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
+        String storeId = sharedPreferences.getString("tindahanId", "");
         Query query = productRef.whereEqualTo("publish", true)
-                .whereEqualTo("tindahanId", "tindahan" + mAuth.getCurrentUser().getUid());
+                .whereEqualTo("tindahanId", storeId);
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, new SnapshotParser<Product>() {

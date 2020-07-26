@@ -25,6 +25,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,7 @@ public class StoreSetupActivity extends AppCompatActivity {
     TextView mWelcome, mNameHelp, mAddressHelp, mContactInfoHelp, mServiceAreaHelp;
     TextInputEditText mTindahanName, mTindahanId, mOwner, mAddress, mContactInfo, mServiceArea, mDeliveryOptions, mPaymentOptions;
     Boolean storeExists = false;
+    String storeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,28 +68,56 @@ public class StoreSetupActivity extends AppCompatActivity {
 
     private void populateTindahanView() {
 
-        final DocumentReference docRef = db.collection(COLLECTION).document(COLLECTION + mUser.getUid());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        mTindahanName.setText(document.get("tindahanName").toString());
-                        mAddress.setText(document.get("address").toString());
-                        mContactInfo.setText(document.get("contactInfo").toString());
-                        String sArea = document.get("serviceArea").toString();
-                        if (document.get("deliveryOptions") != null)
-                            mDeliveryOptions.setText(document.get("deliveryOptions").toString());
-                        if (document.get("paymentOptions") != null)
-                            mPaymentOptions.setText(document.get("paymentOptions").toString());
-                        mServiceArea.setText(sArea.replace("[", "").replace("]",""));
-                        storeExists = true;
-                        saveToSharedPreferences();
-                    }
-                }
-            }
-        });
+       dbRef.whereEqualTo("owner", mUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+           @Override
+           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+               if (task.isSuccessful()) {
+                   QuerySnapshot document = task.getResult();
+                   if (document.getDocuments().isEmpty()) {
+                       //no record found,
+                       storeExists = false;
+                       storeId = dbRef.document().getId();
+                   } else {
+                       storeExists = true;
+                       storeId = document.getDocuments().get(0).getId();
+                       mTindahanName.setText(document.getDocuments().get(0).get("tindahanName").toString());
+                       mAddress.setText(document.getDocuments().get(0).get("address").toString());
+                       mContactInfo.setText(document.getDocuments().get(0).get("contactInfo").toString());
+                       String sArea = document.getDocuments().get(0).get("serviceArea").toString();
+                       if (document.getDocuments().get(0).get("deliveryOptions") != null)
+                           mDeliveryOptions.setText(document.getDocuments().get(0).get("deliveryOptions").toString());
+                       if (document.getDocuments().get(0).get("paymentOptions") != null)
+                           mPaymentOptions.setText(document.getDocuments().get(0).get("paymentOptions").toString());
+                       mServiceArea.setText(sArea.replace("[", "").replace("]",""));
+                       storeExists = true;
+                       saveToSharedPreferences();
+                   }
+               }
+           }
+       });
+
+//        final DocumentReference docRef = db.collection(COLLECTION).document(COLLECTION + mUser.getUid());
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        mTindahanName.setText(document.get("tindahanName").toString());
+//                        mAddress.setText(document.get("address").toString());
+//                        mContactInfo.setText(document.get("contactInfo").toString());
+//                        String sArea = document.get("serviceArea").toString();
+//                        if (document.get("deliveryOptions") != null)
+//                            mDeliveryOptions.setText(document.get("deliveryOptions").toString());
+//                        if (document.get("paymentOptions") != null)
+//                            mPaymentOptions.setText(document.get("paymentOptions").toString());
+//                        mServiceArea.setText(sArea.replace("[", "").replace("]",""));
+//                        storeExists = true;
+//                        saveToSharedPreferences();
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -131,10 +161,10 @@ public class StoreSetupActivity extends AppCompatActivity {
         String owner = mUser.getUid();
         String tindahanId = COLLECTION + owner;
 
-        final Tindahan tindahan = new Tindahan(tindahanId, tindahanName, owner, contactInfo, address,
+        final Tindahan tindahan = new Tindahan(tindahanName, owner, contactInfo, address,
                 paymentOptions, deliveryOptions, true, new ArrayList<String>(Arrays.asList(serviceArea.split(","))));
 
-        dbRef.document(tindahanId).set(tindahan)
+        dbRef.document(storeId).set(tindahan)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -157,7 +187,7 @@ public class StoreSetupActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("tindahanId", COLLECTION + mUser.getUid());
+        editor.putString("tindahanId", storeId);
         editor.putString("tindahanName", mTindahanName.getText().toString());
         editor.putString("contactInfo", mContactInfo.getText().toString());
         editor.putString("serviceArea", mServiceArea.getText().toString());

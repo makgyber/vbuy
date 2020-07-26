@@ -3,7 +3,6 @@ package com.makgyber.vbuys;
 import java.util.ArrayList;
 
 public class Tindahan {
-    private String tindahanId;
     private String tindahanName;
     private String owner;
     private String contactInfo;
@@ -18,8 +17,7 @@ public class Tindahan {
         //need empty constructor
     }
 
-    public Tindahan(String tindahanId, String tindahanName, String owner, String contactInfo, String address, String paymentOptions, String deliveryOptions, Boolean publish, ArrayList<String> serviceArea) {
-        this.tindahanId = tindahanId;
+    public Tindahan(String tindahanName, String owner, String contactInfo, String address, String paymentOptions, String deliveryOptions, Boolean publish, ArrayList<String> serviceArea) {
         this.tindahanName = tindahanName;
         this.owner = owner;
         this.contactInfo = contactInfo;
@@ -28,10 +26,6 @@ public class Tindahan {
         this.deliveryOptions = deliveryOptions;
         this.publish = publish;
         this.serviceArea = serviceArea;
-    }
-
-    public String getTindahanId() {
-        return tindahanId;
     }
 
     public String getTindahanName() {

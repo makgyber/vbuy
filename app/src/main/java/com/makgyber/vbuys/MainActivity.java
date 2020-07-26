@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
+
+            getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE).edit().clear().commit();
+            getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE).edit().clear().commit();
+
             return true;
         }
 
