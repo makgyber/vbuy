@@ -36,7 +36,7 @@ public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "SignInActivity";
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference userRef = db.collection(COLLECTION);
+    CollectionReference userDbRef = db.collection(COLLECTION);
 
     List<AuthUI.IdpConfig> providers;
 
@@ -116,7 +116,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void getUserDetails() {
-        Query userQuery = userRef.whereEqualTo("uid", user.getUid());
+        Query userQuery = userDbRef.whereEqualTo("uid", user.getUid());
         userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -153,15 +153,17 @@ public class SignInActivity extends AppCompatActivity {
 
         User newUser = new User(email, phoneNumber, displayName, photoUrl, address, user.getUid());
 
-        userRef.document().set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+        DocumentReference userDocRef = userDbRef.document();
+        String userProfileId = userDocRef.getId();
+        userDocRef.set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: we're good, proceed please.");
+                Log.d(TAG, "onSuccess: we're good, proceed please." + userProfileId);
 
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("userId", userRef.getId());
+                editor.putString("userId", userProfileId);
                 editor.putString("email", email);
                 editor.putString("displayName", displayName);
                 editor.putString("phoneNumber",phoneNumber);

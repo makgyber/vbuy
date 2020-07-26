@@ -88,7 +88,8 @@ public class ProfileActivity extends AppCompatActivity {
         email.setText(sharedPreferences.getString("email", "no email"));
 
         String photoUrl = sharedPreferences.getString("photoUrl", "");
-        if (!photoUrl.isEmpty()) {
+        if (!photoUrl.isEmpty() && photoUrl.toString().length() > 0) {
+            Log.d(TAG, "populateProfile: loading picasso " + photoUrl.toString() );
             Picasso.get().load(photoUrl).centerCrop().resize(400,400).into(profileImage);
         }
 
@@ -149,26 +150,32 @@ public class ProfileActivity extends AppCompatActivity {
                 while (!urlTask.isSuccessful());
                 Uri downloadUrl = urlTask.getResult();
                 updateProfileImageUri(downloadUrl);
-                Toast.makeText(ProfileActivity.this, "File Uploaded" + downloadUrl.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfileActivity.this, "File Uploaded" + downloadUrl.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void updateProfileImageUri(Uri downloadUrl) {
         DocumentReference profileRef = dbRef.document(userProfileId);
+        Log.d(TAG, "updateProfileImageUri: userProfileId " + userProfileId);
         profileRef.update(
                 "photoUrl", downloadUrl.toString()
         )
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(ProfileActivity.this, "Product ImageUrl updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, "Profile image updated", Toast.LENGTH_SHORT).show();
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("photoUrl", downloadUrl.toString());
+                        editor.commit();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfileActivity.this, "Product not updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, "Profile image not updated", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
