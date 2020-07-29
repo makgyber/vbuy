@@ -16,9 +16,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -36,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private FirebaseUser user;
     private ImageView ivHealth, ivFood, ivServices, ivRealty;
-    private SearchView searchView;
-    private SearchManager searchManager;
+    static SearchView searchView;
+    static SearchManager searchManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,43 +49,28 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        setupIconButtons();
+        BottomNavigationView navigationView = findViewById(R.id.bnv_main);
+        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.action_profile:
+                        loadFragment(new ProfileFragment());
+                        return true;
+                    case R.id.action_home:
+                        loadFragment(new BuyerMainFragment());
+                        return true;
+                    case R.id.action_feedback:
+                        return true;
+                    case R.id.action_messages:
+                        return true;
+                }
+                return false;
+            }
+        });
+
     }
 
-    private void setupIconButtons() {
-        ivServices = findViewById(R.id.iv_services);
-        ivFood = findViewById(R.id.iv_food);
-        ivHealth = findViewById(R.id.iv_health);
-        ivRealty = findViewById(R.id.iv_realty);
-
-        ivFood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchManager.triggerSearch("food", getComponentName(), null);
-            }
-        });
-
-        ivHealth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchManager.triggerSearch("health", getComponentName(), null);
-            }
-        });
-
-        ivRealty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchManager.triggerSearch("realty", getComponentName(), null);
-            }
-        });
-
-        ivServices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchManager.triggerSearch("services", getComponentName(), null);
-            }
-        });
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, StoreSetupActivity.class));
             return true;
         }
-
-        if (id == R.id.action_profile) {
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            return true;
-        }
+//
+//        if (id == R.id.action_profile) {
+//            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+//            return true;
+//        }
 
         if (id == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
@@ -124,17 +112,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buildMainUi() {
-        TextView welcome = findViewById(R.id.text_view_welcome);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Welcome ");
-
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-        String displayName = sharedPreferences.getString("displayName", "no name");
-
-        sb.append(displayName);
-        sb.append("!");
-        welcome.setText(sb.toString());
+//        TextView welcome = findViewById(R.id.text_view_welcome);
+//
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("Welcome ");
+//
+//        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+//        String displayName = sharedPreferences.getString("displayName", "no name");
+//
+//        sb.append(displayName);
+//        sb.append("!");
+//        welcome.setText(sb.toString());
 
     }
 
@@ -146,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             sendToLogin();
         } else {
             buildMainUi();
+            loadFragment(new BuyerMainFragment());
         }
     }
 
@@ -154,7 +143,12 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }
 
 
