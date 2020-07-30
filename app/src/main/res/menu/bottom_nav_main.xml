@@ -27,22 +27,21 @@
         android:id="@+id/action_feedback"
         android:orderInCategory="3"
         android:title="@string/feedback"
-        android:titleCondensed="@string/feedback"
         android:icon="@drawable/ic_feedback_white_24dp"
         />
 
     <item
         android:id="@+id/action_order"
-        android:orderInCategory="3"
-        android:title="@string/feedback"
+        android:orderInCategory="4"
+        android:title="Orders"
         android:titleCondensed="@string/feedback"
         android:icon="@drawable/ic_cart_white_24dp"
         />
 
     <item
         android:id="@+id/action_messages"
-        android:orderInCategory="4"
-        android:title="@string/settings"
+        android:orderInCategory="5"
+        android:title="@string/messages"
         android:icon="@drawable/ic_chat_white_24dp"
         />
 

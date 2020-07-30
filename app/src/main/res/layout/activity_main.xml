@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-        
+
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_nav_main"
             android:id="@+id/bnv_main"
+            app:labelVisibilityMode="labeled"
             android:layout_alignParentBottom="true"
                 />
 
