@@ -2,11 +2,15 @@ package com.makgyber.vbuys;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +18,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -35,6 +53,17 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    private final static String COLLECTION = "user";
+    private final static int PICK_IMAGE = 1;
+    private static final String TAG = "ProfileFragment";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser mUser = mAuth.getCurrentUser();
+    CollectionReference dbRef = db.collection(COLLECTION);
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
 
     TextView displayName, email, phoneNumber, address;
     ImageView profileImage;
@@ -90,7 +119,7 @@ public class ProfileFragment extends Fragment {
         phoneNumber = vw.findViewById(R.id.tv_phone_number);
         address = vw.findViewById(R.id.tv_address);
         email = vw.findViewById(R.id.tv_email);
-        profileImage = vw.findViewById(R.id.iv_profile_photo);
+        profileImage = vw.findViewById(R.id.iv_profile_photo2);
         updateButton = vw.findViewById(R.id.fab_update_profile);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
@@ -109,12 +138,22 @@ public class ProfileFragment extends Fragment {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(ProfileActivity.this, UpdateProfileActivity.class));
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.main_container, new UpdateProfileFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
         photoButton = vw.findViewById(R.id.fab_update_photo);
         photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
@@ -132,6 +171,81 @@ public class ProfileFragment extends Fragment {
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
-        startActivityForResult(chooserIntent, 1);
+        startActivityForResult(chooserIntent, PICK_IMAGE);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        Log.d(TAG, "onActivityResult: starting here" );
+
+        if (requestCode == PICK_IMAGE) {
+            if (data == null) {
+                //return error
+                return;
+            }
+            Log.d(TAG, "onActivityResult: " + data.getDataString());
+            Uri selectedImage = data.getData();
+
+            Picasso.get().load(selectedImage).centerCrop().resize(400,400).into(profileImage);
+            profileImage.setImageURI(selectedImage);
+            uploadProfileImage();
+        }
+    }
+
+    private void uploadProfileImage() {
+        StorageReference productRef = storageRef.child("images/users/" + userProfileId + ".jpg");
+        profileImage.setDrawingCacheEnabled(true);
+        profileImage.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.25), (int)(bitmap.getHeight()*0.25), true);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = productRef.putBytes(data);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Toast.makeText(getContext(), "File Upload failed", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!urlTask.isSuccessful());
+                Uri downloadUrl = urlTask.getResult();
+                updateProfileImageUri(downloadUrl);
+
+            }
+        });
+    }
+
+    private void updateProfileImageUri(Uri downloadUrl) {
+        DocumentReference profileRef = dbRef.document(userProfileId);
+        Log.d(TAG, "updateProfileImageUri: userProfileId " + userProfileId);
+        profileRef.update(
+                "photoUrl", downloadUrl.toString()
+        )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getContext(), "Profile image updated", Toast.LENGTH_SHORT).show();
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("photoUrl", downloadUrl.toString());
+                        editor.commit();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Profile image not updated", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 }

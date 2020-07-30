@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        loadFragment(new BuyerMainFragment());
     }
 
 
@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
             sendToLogin();
         } else {
             buildMainUi();
-            loadFragment(new BuyerMainFragment());
         }
     }
 
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void loadFragment(Fragment fragment) {
+   private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack(null);
