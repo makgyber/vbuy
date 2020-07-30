@@ -18,7 +18,7 @@
                         android:text="Welcome ..."
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/colorPrimaryDark"
                         />
 
                     <LinearLayout
@@ -30,37 +30,39 @@
                         android:padding="10dp"
                         android:orientation="horizontal"
                         android:gravity="center">
-                            <ImageView
-                                android:id="@+id/iv_services"
 
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginEnd="20dp"
-                                android:src="@drawable/ic_pan_tool_lavender_48dp"
-                                 />
+                        <ImageView
+                            android:id="@+id/iv_food"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_local_dining_black_24dp" />
 
-                            <ImageView
-                                android:id="@+id/iv_food"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_marginEnd="20dp"
-                                android:src="@drawable/ic_local_dining_lavender_48dp" />
+                        <ImageView
+                            android:id="@+id/iv_services"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_build_black_24dp" />
 
-                            <ImageView
-                                android:id="@+id/iv_health"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_marginEnd="20dp"
-                                android:src="@drawable/ic_local_hospital_lavender_48dp"
-                                 />
+                        <ImageView
+                            android:id="@+id/iv_devices"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_devices_other_black_24dp" />
 
-                            <ImageView
-                                android:id="@+id/iv_realty"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_marginEnd="20dp"
-                                android:src="@drawable/ic_home_lavender_48dp" />
+                        <ImageView
+                            android:id="@+id/iv_delivery"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_directions_bike_black_48dp" />
+
                     </LinearLayout>
 
             </RelativeLayout>

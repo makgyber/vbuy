@@ -100,7 +100,7 @@ public class SignInActivity extends AppCompatActivity {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 Log.d(TAG, "onActivityResult: " + user);
                 getUserDetails();
-                startActivity(new Intent(SignInActivity.this, MainActivity.class));
+
                 finish();
             } else {
                 Toast.makeText(SignInActivity.this, ""+response.getError().getMessage(), Toast.LENGTH_SHORT).show();
@@ -136,8 +136,11 @@ public class SignInActivity extends AppCompatActivity {
                         editor.putString("displayName", document.getDocuments().get(0).get("displayName").toString());
                         editor.putString("phoneNumber",document.getDocuments().get(0).get("phoneNumber").toString());
                         editor.putString("address", document.getDocuments().get(0).get("address").toString());
+                        editor.putString("facebook", document.getDocuments().get(0).get("facebook").toString());
+                        editor.putString("twitter", document.getDocuments().get(0).get("twitter").toString());
                         editor.putString("photoUrl", document.getDocuments().get(0).get("photoUrl").toString());
                         editor.commit();
+                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     }
                 }
             }
@@ -150,6 +153,8 @@ public class SignInActivity extends AppCompatActivity {
         String phoneNumber = user.getPhoneNumber().isEmpty() ? "my phone" : user.getPhoneNumber();
         String photoUrl = user.getPhotoUrl() == null ? "" : user.getPhotoUrl().toString();
         String address = "my city";
+        String facebook = "my facebook";
+        String twitter = "my twitter";
 
         User newUser = new User(email, phoneNumber, displayName, photoUrl, address, user.getUid());
 
@@ -168,9 +173,11 @@ public class SignInActivity extends AppCompatActivity {
                 editor.putString("displayName", displayName);
                 editor.putString("phoneNumber",phoneNumber);
                 editor.putString("address", address);
+                editor.putString("facebook", facebook);
+                editor.putString("twitter", twitter);
                 editor.putString("photoUrl", photoUrl);
                 editor.commit();
-
+                startActivity(new Intent(SignInActivity.this, MainActivity.class));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

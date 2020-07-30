@@ -65,7 +65,7 @@ public class ProfileFragment extends Fragment {
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
 
-    TextView displayName, email, phoneNumber, address;
+    TextView displayName, email, phoneNumber, address, facebook, twitter;
     ImageView profileImage;
     FloatingActionButton updateButton, photoButton;
     String userProfileId;
@@ -118,6 +118,8 @@ public class ProfileFragment extends Fragment {
         displayName = vw.findViewById(R.id.tv_display_name);
         phoneNumber = vw.findViewById(R.id.tv_phone_number);
         address = vw.findViewById(R.id.tv_address);
+        facebook = vw.findViewById(R.id.tv_facebook);
+        twitter = vw.findViewById(R.id.tv_twitter);
         email = vw.findViewById(R.id.tv_email);
         profileImage = vw.findViewById(R.id.iv_profile_photo2);
         updateButton = vw.findViewById(R.id.fab_update_profile);
@@ -127,6 +129,8 @@ public class ProfileFragment extends Fragment {
         displayName.setText(sharedPreferences.getString("displayName", "no name"));
         phoneNumber.setText(sharedPreferences.getString("phoneNumber", "no phone"));
         address.setText(sharedPreferences.getString("address", "no address"));
+        facebook.setText(sharedPreferences.getString("facebook", "no facebook"));
+        twitter.setText(sharedPreferences.getString("twitter", "no twitter"));
         email.setText(sharedPreferences.getString("email", "no email"));
 
         String photoUrl = sharedPreferences.getString("photoUrl", "");

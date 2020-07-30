@@ -111,20 +111,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void buildMainUi() {
-//        TextView welcome = findViewById(R.id.text_view_welcome);
-//
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Welcome ");
-//
-//        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-//        String displayName = sharedPreferences.getString("displayName", "no name");
-//
-//        sb.append(displayName);
-//        sb.append("!");
-//        welcome.setText(sb.toString());
-
-    }
 
     @Override
     protected void onStart() {
@@ -132,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (mAuth.getCurrentUser() == null) {
             sendToLogin();
-        } else {
-            buildMainUi();
         }
     }
 

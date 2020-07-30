@@ -28,7 +28,7 @@ import static android.content.Context.MODE_PRIVATE;
  * create an instance of this fragment.
  */
 public class BuyerMainFragment extends Fragment {
-    private ImageView ivHealth, ivFood, ivServices, ivRealty;
+    private ImageView ivHealth, ivFood, ivServices, ivRealty, ivDevices, ivDelivery;
     private String displayName;
     SearchView searchView;
     SearchManager searchManager;
@@ -71,8 +71,8 @@ public class BuyerMainFragment extends Fragment {
     private void setupIconButtons(View view) {
         ivServices = view.findViewById(R.id.iv_services);
         ivFood = view.findViewById(R.id.iv_food);
-        ivHealth = view.findViewById(R.id.iv_health);
-        ivRealty = view.findViewById(R.id.iv_realty);
+        ivDevices = view.findViewById(R.id.iv_devices);
+        ivDelivery = view.findViewById(R.id.iv_delivery);
 
         ivFood.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,17 +81,17 @@ public class BuyerMainFragment extends Fragment {
             }
         });
 
-        ivHealth.setOnClickListener(new View.OnClickListener() {
+        ivDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.searchManager.triggerSearch("health", getActivity().getComponentName(), null);
+                MainActivity.searchManager.triggerSearch("devices", getActivity().getComponentName(), null);
             }
         });
 
-        ivRealty.setOnClickListener(new View.OnClickListener() {
+        ivDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.searchManager.triggerSearch("realty", getActivity().getComponentName(), null);
+                MainActivity.searchManager.triggerSearch("delivery", getActivity().getComponentName(), null);
             }
         });
 
@@ -108,7 +108,7 @@ public class BuyerMainFragment extends Fragment {
         sb.append("Welcome ");
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-        String displayName = sharedPreferences.getString("displayName", "no name");
+        String displayName = sharedPreferences.getString("displayName", "");
 
         sb.append(displayName);
         sb.append("!");
