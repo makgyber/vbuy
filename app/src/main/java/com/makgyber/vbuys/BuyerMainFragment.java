@@ -28,7 +28,7 @@ import static android.content.Context.MODE_PRIVATE;
  * create an instance of this fragment.
  */
 public class BuyerMainFragment extends Fragment {
-    private ImageView ivHealth, ivFood, ivServices, ivRealty, ivDevices, ivDelivery;
+    private TextView ivHealth, ivFood, ivServices, ivRealty, ivDevices, ivDelivery;
     private String displayName;
     SearchView searchView;
     SearchManager searchManager;
@@ -69,10 +69,10 @@ public class BuyerMainFragment extends Fragment {
     }
 
     private void setupIconButtons(View view) {
-        ivServices = view.findViewById(R.id.iv_services);
-        ivFood = view.findViewById(R.id.iv_food);
-        ivDevices = view.findViewById(R.id.iv_devices);
-        ivDelivery = view.findViewById(R.id.iv_delivery);
+        ivServices = view.findViewById(R.id.tv_services);
+        ivFood = view.findViewById(R.id.tv_food);
+        ivDevices = view.findViewById(R.id.tv_devices);
+        ivDelivery = view.findViewById(R.id.tv_delivery);
 
         ivFood.setOnClickListener(new View.OnClickListener() {
             @Override
