@@ -1,8 +1,16 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.models;
 
 import java.util.List;
 
 public class Product {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     private String id;
     private String productName;
     private String description;
@@ -13,6 +21,7 @@ public class Product {
     private List<String> tags;
     private List<String> serviceArea;
     private String imageUri;
+    private String category;
 
     public Product() {
         //need empty constructor
@@ -26,7 +35,8 @@ public class Product {
                    Boolean publish,
                    List<String> tags,
                    List<String> serviceArea,
-                   String imageUri) {
+                   String imageUri,
+                   String category) {
         this.productName = productName;
         this.description = description;
         this.tindahanName = tindahanName;
@@ -36,6 +46,7 @@ public class Product {
         this.tags = tags;
         this.serviceArea = serviceArea;
         this.imageUri = imageUri;
+        this.category = category;
     }
 
     public String getProductName() {
@@ -70,19 +81,19 @@ public class Product {
         return price;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getImageUri() {
         return imageUri;
     }
 
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

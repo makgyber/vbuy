@@ -16,12 +16,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,13 +35,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.makgyber.vbuys.Product;
+import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InventoryDetailActivity extends AppCompatActivity {
     private final static String TINDAHAN = "tindahan";
@@ -60,7 +67,10 @@ public class InventoryDetailActivity extends AppCompatActivity {
     Boolean imageUpdated = false;
     ProgressBar spinner;
     String tindahanName, tindahanId, tindahanServiceArea, tindahanContactInfo;
-
+    ChipGroup categoryGroup;
+    Chip foodChip, deliveryChip, devicesChip, servicesChip;
+    Switch featureSwitch;
+    String selectedCategory="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +88,12 @@ public class InventoryDetailActivity extends AppCompatActivity {
         price = (TextInputEditText) findViewById(R.id.price);
         tags = (TextInputEditText) findViewById(R.id.tags);
         productImage = (ImageView) findViewById(R.id.product_image);
+        categoryGroup = findViewById(R.id.cg_category);
+        foodChip = findViewById(R.id.c_food);
+        servicesChip = findViewById(R.id.c_services);
+        deliveryChip = findViewById(R.id.c_delivery);
+        devicesChip = findViewById(R.id.c_devices);
+        featureSwitch = findViewById(R.id.s_feature_me);
 
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
@@ -85,6 +101,21 @@ public class InventoryDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
+
+        categoryGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup chipGroup, int i) {
+                Chip chip = chipGroup.findViewById(i);
+                if (chip != null) {
+                    String oldCategory = selectedCategory;
+                    selectedCategory = chip.getText().toString().toLowerCase();
+                    String[] currentTags = tags.getText().toString().split(",");
+                    Collection<String> newTags = Arrays.stream(currentTags).map(String::trim).filter(e -> !e.equalsIgnoreCase(oldCategory)).collect(Collectors.toList());
+                    newTags.add(selectedCategory);
+                    tags.setText(newTags.toString().replace("[", "").replace("]", ""));
+                }
             }
         });
 
@@ -114,6 +145,14 @@ public class InventoryDetailActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
+                        String category = document.get("category").toString();
+
+                        foodChip.setChecked(category.equalsIgnoreCase("food"));
+                        devicesChip.setChecked(category.equalsIgnoreCase("devices"));
+                        servicesChip.setChecked(category.equalsIgnoreCase("services"));
+                        deliveryChip.setChecked(category.equalsIgnoreCase("delivery"));
+
+                        featureSwitch.setChecked(document.get("publish").toString().equals("true"));
 
                         name.setText(document.get("productName").toString());
                         description.setText(document.get("description").toString());
@@ -163,7 +202,6 @@ public class InventoryDetailActivity extends AppCompatActivity {
                 while (!urlTask.isSuccessful());
                 Uri downloadUrl = urlTask.getResult();
                 updateProductImageUri(downloadUrl);
-                Log.d(TAG, "onSuccess: DownLoadUrl " + downloadUrl.toString());
                 spinner.setVisibility(View.GONE);
             }
         });
@@ -242,10 +280,11 @@ public class InventoryDetailActivity extends AppCompatActivity {
                 tindahanName,
                 tindahanId,
                 Double.parseDouble(price.getText().toString()),
-                true, // TODO: use a switch
+                featureSwitch.isChecked(),
                 tagsList,
                 saList,
-                "");
+                "",
+                selectedCategory);
 
         Log.d(TAG, "saveProduct: " + product.getProductName());
 
@@ -273,7 +312,9 @@ public class InventoryDetailActivity extends AppCompatActivity {
                     "description", product.getDescription(),
                     "price", product.getPrice(),
                     "tags", product.getTags(),
-                    "tindahanName", product.getTindahanName()
+                    "tindahanName", product.getTindahanName(),
+                    "category", product.getCategory(),
+                    "publish", product.getPublish()
                     )
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

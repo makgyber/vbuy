@@ -22,7 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.makgyber.vbuys.Product;
+import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.SearchProductResultsAdapter;
 
@@ -95,18 +95,17 @@ public class SearchableActivity extends AppCompatActivity {
 
         Log.d(TAG, "doMySearch: " + query);
 
-        Query searchQuery = productRef
+        Query searchTagsQuery = productRef
                 .whereEqualTo("publish", true)
                 .whereArrayContains("tags", query.trim());
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(searchQuery, new SnapshotParser<Product>() {
+                .setQuery(searchTagsQuery, new SnapshotParser<Product>() {
                     @NonNull
                     @Override
                     public Product parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                         Product product = snapshot.toObject(Product.class);
                         product.setId( snapshot.getId() );
-                        Log.d(TAG, "parseSnapshot: " + snapshot.getId());
                         return product;
                     }
                 })

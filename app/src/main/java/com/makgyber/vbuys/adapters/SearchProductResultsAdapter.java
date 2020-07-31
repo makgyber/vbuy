@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.makgyber.vbuys.Product;
+import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.activities.ProductDetailActivity;
 import com.makgyber.vbuys.R;
 import com.squareup.picasso.Picasso;

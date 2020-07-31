@@ -18,7 +18,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.makgyber.vbuys.Product;
+import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ProductAdapter;
 
@@ -64,8 +64,7 @@ public class InventoryActivity extends AppCompatActivity {
     private void getInventoryList() {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
         String storeId = sharedPreferences.getString("tindahanId", "");
-        Query query = productRef.whereEqualTo("publish", true)
-                .whereEqualTo("tindahanId", storeId);
+        Query query = productRef.whereEqualTo("tindahanId", storeId);
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, new SnapshotParser<Product>() {
