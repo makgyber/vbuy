@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/seller_dashboard"
+        android:orderInCategory="1"
+        android:title="@string/dashboard"
+        android:icon="@drawable/ic_home_white_24dp"
+        />
+
+    <item
+        android:id="@+id/seller_settings"
+        android:orderInCategory="1"
+        android:title="Store Setup"
+        android:icon="@drawable/ic_settings_black_24dp"
+        />
+
+    <item
+        android:id="@+id/seller_inventory"
+        android:orderInCategory="1"
+        android:title="Inventory"
+        android:icon="@drawable/ic_inventory_white_24dp"
+        />
+
+    <item
+        android:id="@+id/seller_orders"
+        android:orderInCategory="1"
+        android:title="Orders"
+        android:icon="@drawable/ic_cart_white_24dp"
+        />
+
+    <item
+        android:id="@+id/seller_messages"
+        android:orderInCategory="1"
+        android:title="@string/messages"
+        android:icon="@drawable/ic_chat_white_24dp"
+        />
+</menu>

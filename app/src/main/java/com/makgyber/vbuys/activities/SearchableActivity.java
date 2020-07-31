@@ -56,12 +56,12 @@ public class SearchableActivity extends AppCompatActivity {
         sv.setIconifiedByDefault(false);
         sv.setLayoutParams(new ActionBar.LayoutParams(Gravity.LEFT));
         sv.setQuery(query, false);
-        sv.requestFocus();
 
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 doMySearch(query);
+                sv.clearFocus();
                 return false;
             }
 
@@ -95,12 +95,10 @@ public class SearchableActivity extends AppCompatActivity {
 
         Log.d(TAG, "doMySearch: " + query);
 
-        Query searchTagsQuery = productRef
-                .whereEqualTo("publish", true)
-                .whereArrayContains("tags", query.trim());
+        Query searchQuery = productRef.whereEqualTo("publish", true).whereArrayContains("tags", query.trim());
 
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
-                .setQuery(searchTagsQuery, new SnapshotParser<Product>() {
+                .setQuery(searchQuery, new SnapshotParser<Product>() {
                     @NonNull
                     @Override
                     public Product parseSnapshot(@NonNull DocumentSnapshot snapshot) {
@@ -118,6 +116,7 @@ public class SearchableActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(SearchableActivity.this));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+
     }
 
     @Override

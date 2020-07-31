@@ -10,6 +10,7 @@ public class Tindahan {
     private String paymentOptions;
     private String deliveryOptions;
     private Boolean publish;
+    private String id;
     private ArrayList<String> serviceArea;
 
 
@@ -58,5 +59,13 @@ public class Tindahan {
 
     public String getDeliveryOptions() {
         return deliveryOptions;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

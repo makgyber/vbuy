@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 public class StoreSetupActivity extends AppCompatActivity {
 
     private final static String COLLECTION = "tindahan";
+    private final static String TAG = "StoreSetupActivity";
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -42,6 +44,7 @@ public class StoreSetupActivity extends AppCompatActivity {
     TextInputEditText mTindahanName, mTindahanId, mOwner, mAddress, mContactInfo, mServiceArea, mDeliveryOptions, mPaymentOptions;
     Boolean storeExists = false;
     String storeId;
+    String owner = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,56 +70,40 @@ public class StoreSetupActivity extends AppCompatActivity {
 
     private void populateTindahanView() {
 
-       dbRef.whereEqualTo("owner", mUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-               if (task.isSuccessful()) {
-                   QuerySnapshot document = task.getResult();
-                   if (document.getDocuments().isEmpty()) {
-                       //no record found,
-                       storeExists = false;
-                       storeId = dbRef.document().getId();
-                   } else {
-                       storeExists = true;
-                       storeId = document.getDocuments().get(0).getId();
-                       mTindahanName.setText(document.getDocuments().get(0).get("tindahanName").toString());
-                       mAddress.setText(document.getDocuments().get(0).get("address").toString());
-                       mContactInfo.setText(document.getDocuments().get(0).get("contactInfo").toString());
-                       String sArea = document.getDocuments().get(0).get("serviceArea").toString();
-                       if (document.getDocuments().get(0).get("deliveryOptions") != null)
-                           mDeliveryOptions.setText(document.getDocuments().get(0).get("deliveryOptions").toString());
-                       if (document.getDocuments().get(0).get("paymentOptions") != null)
-                           mPaymentOptions.setText(document.getDocuments().get(0).get("paymentOptions").toString());
-                       mServiceArea.setText(sArea.replace("[", "").replace("]",""));
-                       storeExists = true;
-                       saveToSharedPreferences();
+       if (getIntent().hasExtra("TINDAHAN_ID")) {
+           storeId = getIntent().getExtras().get("TINDAHAN_ID").toString();
+           dbRef.document(storeId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+               @Override
+               public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                   if (task.isSuccessful()) {
+                       DocumentSnapshot document = task.getResult();
+                       if (document.exists()) {
+                           storeExists = true;
+                           storeId = document.getId();
+                           mTindahanName.setText(document.get("tindahanName").toString());
+                           mAddress.setText(document.get("address").toString());
+                           mContactInfo.setText(document.get("contactInfo").toString());
+                           String sArea = document.get("serviceArea").toString();
+                           if (document.get("deliveryOptions") != null)
+                               mDeliveryOptions.setText(document.get("deliveryOptions").toString());
+                           if (document.get("paymentOptions") != null)
+                               mPaymentOptions.setText(document.get("paymentOptions").toString());
+                           mServiceArea.setText(sArea.replace("[", "").replace("]",""));
+                           storeExists = true;
+                           saveToSharedPreferences();
+                       } else {
+                           //no record found,
+                           storeExists = false;
+                           storeId = dbRef.document().getId();
+                       }
                    }
                }
-           }
-       });
+           });
+       } else {
+           storeExists = false;
+           storeId = dbRef.document().getId();
+       }
 
-//        final DocumentReference docRef = db.collection(COLLECTION).document(COLLECTION + mUser.getUid());
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        mTindahanName.setText(document.get("tindahanName").toString());
-//                        mAddress.setText(document.get("address").toString());
-//                        mContactInfo.setText(document.get("contactInfo").toString());
-//                        String sArea = document.get("serviceArea").toString();
-//                        if (document.get("deliveryOptions") != null)
-//                            mDeliveryOptions.setText(document.get("deliveryOptions").toString());
-//                        if (document.get("paymentOptions") != null)
-//                            mPaymentOptions.setText(document.get("paymentOptions").toString());
-//                        mServiceArea.setText(sArea.replace("[", "").replace("]",""));
-//                        storeExists = true;
-//                        saveToSharedPreferences();
-//                    }
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -151,14 +138,17 @@ public class StoreSetupActivity extends AppCompatActivity {
     }
 
     private void saveTindahan() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
+        SharedPreferences sharedUserPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+        String userId = sharedUserPreferences.getString("userId", "");
+        Log.d(TAG, "saveTindahan: userid " + userId);
         String tindahanName = mTindahanName.getText().toString();
         String address = mAddress.getText().toString();
         String contactInfo = mContactInfo.getText().toString();
         String serviceArea = mServiceArea.getText().toString();
         String paymentOptions = mPaymentOptions.getText().toString();
         String deliveryOptions = mDeliveryOptions.getText().toString();
-        String owner = mUser.getUid();
-        String tindahanId = COLLECTION + owner;
+        String owner = userId;
 
         final Tindahan tindahan = new Tindahan(tindahanName, owner, contactInfo, address,
                 paymentOptions, deliveryOptions, true, new ArrayList<String>(Arrays.asList(serviceArea.split(","))));

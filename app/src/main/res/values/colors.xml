@@ -19,5 +19,10 @@
     <color name="followingBg">#49BEFF</color>
     <color name="grey">#E5E5E5</color>
 
+
+    <color name="colorPrimarySeller">#65DCE5</color>
+    <color name="colorPrimaryDarkSeller">#49BEFF</color>
+    <color name="colorAccentSeller">#E5E5E5</color>
+
     <color name="white">#FFFFFF</color>
 </resources>

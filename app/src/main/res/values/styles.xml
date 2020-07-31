@@ -9,6 +9,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SellerTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimarySeller</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkSeller</item>
+        <item name="colorAccent">@color/colorAccentSeller</item>
+    </style>
+
     <style name="NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
