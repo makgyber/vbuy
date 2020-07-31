@@ -1,7 +1,6 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.fragments;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -10,14 +9,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.makgyber.vbuys.activities.MainActivity;
+import com.makgyber.vbuys.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -30,8 +27,6 @@ import static android.content.Context.MODE_PRIVATE;
 public class BuyerMainFragment extends Fragment {
     private TextView ivHealth, ivFood, ivServices, ivRealty, ivDevices, ivDelivery;
     private String displayName;
-    SearchView searchView;
-    SearchManager searchManager;
 
     public BuyerMainFragment() {
         // Required empty public constructor

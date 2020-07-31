@@ -1,6 +1,5 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.fragments;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -26,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.makgyber.vbuys.R;
 
 import static android.content.Context.MODE_PRIVATE;
 

@@ -1,4 +1,4 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.adapters;
 
 import android.content.Intent;
 import android.util.Log;
@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.makgyber.vbuys.activities.InventoryDetailActivity;
+import com.makgyber.vbuys.Product;
+import com.makgyber.vbuys.R;
 import com.squareup.picasso.Picasso;
 
-public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Product, SearchProductResultsAdapter.ProductHolder> {
+public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
 
-    public SearchProductResultsAdapter(@NonNull FirestoreRecyclerOptions<Product> options) {
+    public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options) {
         super(options);
     }
 
@@ -31,7 +34,7 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
         holder.textViewTindahan.setText(model.getTindahanName());
         holder.productId = model.getId();
         if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
-            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(300,300).into(holder.productImage);
+            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(200,200).into(holder.productImage);
             Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
         }
 
@@ -39,21 +42,9 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String productId = model.getId();
-                String productName = model.getProductName();
-                String productDescription = model.getDescription();
-                String productImageUrl = model.getImageUri();
-                String productPrice = Double.toString(model.getPrice());
-
-                Intent intent = new Intent(v.getContext(), ProductDetailActivity.class );
-                intent.putExtra("PRODUCT_ID", productId);
-                intent.putExtra("PRODUCT_NAME", productName);
-                intent.putExtra("PRODUCT_DESCRIPTION", productDescription);
-                intent.putExtra("PRODUCT_IMAGE", productImageUrl);
-                intent.putExtra("PRODUCT_PRICE", productPrice);
-                intent.putExtra("PRODUCT_TINDAHAN_ID", model.getTindahanId());
-                intent.putExtra("PRODUCT_TINDAHAN_NAME", model.getTindahanName());
-
+                String product_id = model.getId();
+                Intent intent = new Intent(v.getContext(), InventoryDetailActivity.class );
+                intent.putExtra("PRODUCT_ID", product_id);
                 v.getContext().startActivity(intent);
             }
         });
@@ -62,7 +53,7 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
     @NonNull
     @Override
     public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_product_result_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, parent, false);
         return new ProductHolder(v);
     }
 
@@ -85,4 +76,3 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
     }
 
 }
-

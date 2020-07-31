@@ -8,7 +8,7 @@
     android:layout_gravity="center_vertical"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context=".InventoryDetailActivity">
+    tools:context=".activities.InventoryDetailActivity">
 
     <ProgressBar
         android:id="@+id/progressBar1"

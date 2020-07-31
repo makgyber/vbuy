@@ -1,4 +1,4 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,14 +32,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.makgyber.vbuys.Product;
+import com.makgyber.vbuys.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InventoryDetailActivity extends AppCompatActivity {
     private final static String TINDAHAN = "tindahan";

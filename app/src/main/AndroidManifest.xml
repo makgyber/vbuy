@@ -12,18 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdateProfileActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ProfileActivity" />
-        </activity>
-        <activity android:name=".ProfileActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+<!--        <activity android:name=".UpdateProfileActivity">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.PARENT_ACTIVITY"-->
+<!--                android:value=".ProfileActivity" />-->
+<!--        </activity>-->
+<!--        <activity android:name=".ProfileActivity">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.PARENT_ACTIVITY"-->
+<!--                android:value=".activities.MainActivity" />-->
+<!--        </activity>-->
+
         <activity
-            android:name=".SignInActivity"
+            android:name=".activities.SignInActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,28 +32,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InventoryDetailActivity">
+        <activity android:name=".activities.InventoryDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".InventoryActivity" />
+                android:value=".activities.InventoryActivity" />
         </activity>
-        <activity android:name=".InventoryActivity">
+        <activity android:name=".activities.InventoryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreSetupActivity" />
+                android:value=".activities.StoreSetupActivity" />
         </activity>
-        <activity android:name=".StoreSetupActivity">
+        <activity android:name=".activities.StoreSetupActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name=".ProductDetailActivity">
+        <activity android:name=".activities.ProductDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SearchableActivity" />
+                android:value=".activities.SearchableActivity" />
         </activity>
         <activity
-            android:name=".SearchableActivity"
+            android:name=".activities.SearchableActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -60,16 +61,18 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activities.MainActivity" />
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".activities.MainActivity">
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".SearchableActivity" />
+                android:value=".activities.SearchableActivity" />
         </activity>
+
     </application>
 
 </manifest>

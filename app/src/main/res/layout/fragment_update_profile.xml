@@ -7,7 +7,7 @@
     android:layout_margin="10dp"
     android:layout_gravity="top"
     android:orientation="vertical"
-    tools:context=".UpdateProfileFragment">
+    tools:context=".fragments.UpdateProfileFragment">
 
     <TextView
         android:layout_width="match_parent"

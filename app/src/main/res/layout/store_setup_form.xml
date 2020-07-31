@@ -8,7 +8,7 @@
     android:layout_gravity="center_vertical"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context=".StoreSetupActivity">
+    tools:context=".activities.StoreSetupActivity">
 
     <TextView
         android:layout_width="match_parent"

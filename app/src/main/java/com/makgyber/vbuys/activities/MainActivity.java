@@ -1,33 +1,28 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.makgyber.vbuys.adapters.ProductAdapter;
+import com.makgyber.vbuys.R;
+import com.makgyber.vbuys.fragments.BuyerMainFragment;
+import com.makgyber.vbuys.fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private ProductAdapter adapter;
     private FirebaseUser user;
     private ImageView ivHealth, ivFood, ivServices, ivRealty;
-    static SearchView searchView;
-    static SearchManager searchManager;
+    public static SearchView searchView;
+    public static SearchManager searchManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, StoreSetupActivity.class));
             return true;
         }
-//
-//        if (id == R.id.action_profile) {
-//            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-//            return true;
-//        }
 
         if (id == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();

@@ -1,4 +1,4 @@
-package com.makgyber.vbuys;
+package com.makgyber.vbuys.models;
 
 import android.net.Uri;
 
