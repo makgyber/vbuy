@@ -81,7 +81,7 @@ public class SignInActivity extends AppCompatActivity {
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setTheme(R.style.AppTheme)
-                        .setLogo(R.drawable.villagebuys_logo)
+                        .setLogo(R.drawable.full_banner_icon)
                         .setTosAndPrivacyPolicyUrls("https://www.google.com", "https://www.yahoo.com")
 //                        .setAlwaysShowSignInMethodScreen(true)
 //                        .setIsSmartLockEnabled(false)
