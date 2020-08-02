@@ -50,51 +50,51 @@
 
                         <TextView
                             android:id="@+id/tv_food"
-                            android:layout_width="wrap_content"
+                            android:layout_width="64dp"
                             android:layout_height="wrap_content"
                             android:drawableTop="@drawable/ic_local_dining_black_24dp"
                             android:text="Food"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:textAlignment="center"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="@drawable/rounded_item"
                             android:clickable="true"
                             />
 
                         <TextView
                             android:id="@+id/tv_services"
-                            android:layout_width="wrap_content"
+                            android:layout_width="64dp"
                             android:layout_height="wrap_content"
                             android:drawableTop="@drawable/ic_build_black_24dp"
                             android:text="Services"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:textAlignment="center"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="@drawable/rounded_item"
                             android:clickable="true"/>
 
                         <TextView
                             android:id="@+id/tv_devices"
-                            android:layout_width="wrap_content"
+                            android:layout_width="64dp"
                             android:layout_height="wrap_content"
                             android:drawableTop="@drawable/ic_devices_other_black_24dp"
                             android:text="Devices"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:textAlignment="center"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="@drawable/rounded_item"
                             android:clickable="true"/>
 
                         <TextView
                             android:id="@+id/tv_delivery"
-                            android:layout_width="wrap_content"
+                            android:layout_width="64dp"
                             android:layout_height="wrap_content"
                             android:drawableTop="@drawable/ic_directions_bike_black_48dp"
                             android:text="Delivery"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:textAlignment="center"
-                            android:background="?attr/selectableItemBackground"
+                            android:background="@drawable/rounded_item"
                             android:clickable="true"/>
 
                     </LinearLayout>
