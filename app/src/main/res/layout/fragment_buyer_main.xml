@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.BuyerMainFragment">
 
             <RelativeLayout
@@ -10,18 +11,34 @@
                 android:layout_height="match_parent"
                 android:id="@+id/fl_main"
                 android:layout_above="@+id/bnv_main">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:paddingVertical="4dp"
+                    android:orientation="vertical"
+                    android:id="@+id/ll_my_location">
                     <TextView
                         android:id="@+id/text_view_welcome"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:text="Welcome ..."
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingVertical="4dp"
+                        android:text="Click to set location"
                         android:textAlignment="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:drawableRight="@drawable/ic_place_white_24dp"
+                        android:textColor="@color/white"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:layout_weight="1"
                         />
+
+                </LinearLayout>
+
                     <LinearLayout
-                        android:layout_below="@+id/text_view_welcome"
+                        android:id="@+id/ll_icon_bar"
+                        android:layout_below="@+id/ll_my_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rounded_item"
@@ -39,7 +56,10 @@
                             android:text="Food"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            />
 
                         <TextView
                             android:id="@+id/tv_services"
@@ -49,7 +69,9 @@
                             android:text="Services"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"/>
 
                         <TextView
                             android:id="@+id/tv_devices"
@@ -59,7 +81,9 @@
                             android:text="Devices"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"/>
 
                         <TextView
                             android:id="@+id/tv_delivery"
@@ -69,43 +93,48 @@
                             android:text="Delivery"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
-                            android:textAlignment="center" />
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_food"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginLeft="10dp"-->
-<!--                            android:layout_marginRight="10dp"-->
-<!--                            android:textAlignment="center"-->
-<!--                            android:accessibilityPaneTitle="food"-->
-<!--                            android:src="@drawable/ic_local_dining_black_24dp" />-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_services"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginLeft="10dp"-->
-<!--                            android:layout_marginRight="10dp"-->
-<!--                            android:src="@drawable/ic_build_black_24dp" />-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_devices"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginLeft="10dp"-->
-<!--                            android:layout_marginRight="10dp"-->
-<!--                            android:src="@drawable/ic_devices_other_black_24dp" />-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_delivery"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginLeft="10dp"-->
-<!--                            android:layout_marginRight="10dp"-->
-<!--                            android:src="@drawable/ic_directions_bike_black_48dp" />-->
+                            android:textAlignment="center"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"/>
 
                     </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_below="@+id/ll_icon_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:id="@+id/tv_store_map"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="Placeholder"/>
+
+<!--                        <fragment-->
+<!--                            android:layout_below="@+id/tv_store_map"-->
+<!--                            android:id="@+id/autocomplete_fragment"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"-->
+<!--                            />-->
+<!--                        <fragment-->
+<!--                            android:id="@+id/map"-->
+<!--                            android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_below="@+id/autocomplete_fragment"-->
+<!--                            tools:context=".activities.MapsActivity" />-->
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
             </RelativeLayout>
 
 </FrameLayout>

@@ -138,6 +138,7 @@ public class SignInActivity extends AppCompatActivity {
                         editor.putString("facebook", document.getDocuments().get(0).get("facebook").toString());
                         editor.putString("twitter", document.getDocuments().get(0).get("twitter").toString());
                         editor.putString("photoUrl", document.getDocuments().get(0).get("photoUrl").toString());
+                        editor.putString("deliveryRadius", "5");
                         editor.commit();
                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     }
@@ -175,6 +176,8 @@ public class SignInActivity extends AppCompatActivity {
                 editor.putString("facebook", facebook);
                 editor.putString("twitter", twitter);
                 editor.putString("photoUrl", photoUrl);
+                editor.putString("deliveryRadius", "5");
+
                 editor.commit();
                 startActivity(new Intent(SignInActivity.this, MainActivity.class));
             }

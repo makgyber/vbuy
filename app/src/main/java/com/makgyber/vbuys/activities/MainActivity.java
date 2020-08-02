@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -20,12 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,10 +38,17 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,7 +59,11 @@ import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
 import com.makgyber.vbuys.fragments.ProfileFragment;
 
-import org.w3c.dom.Text;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
     private LatLng mDefaultLocation = new LatLng(14.599512, 120.984222);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 99;
     private boolean mLocationPermissionGranted;
-    private Location mLastKnownLocation;
-    private LatLng deliveryLatLng;
-    private CameraPosition mCameraPosition;
+    public Location mLastKnownLocation;
+    public String defaultDeliveryLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
 
         BottomNavigationView navigationView = findViewById(R.id.bnv_main);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -95,13 +108,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_feedback:
                         return true;
                     case R.id.action_messages:
+//                        startActivity(new Intent(MainActivity.this, MapsActivity.class));
                         return true;
                 }
                 return false;
             }
         });
         loadFragment(new BuyerMainFragment());
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
     }
 
     @Override
@@ -135,11 +149,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_location) {
-            mapDialog();
-            return true;
-        }
-
         if (id == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
 
@@ -152,64 +161,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void mapDialog() {
-        final Dialog dialog = new Dialog(MainActivity.this);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        /////make map clear
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-        dialog.setContentView(R.layout.dialog_map);////your custom content
-
-        MapView mMapView = (MapView) dialog.findViewById(R.id.mapView);
-        MapsInitializer.initialize(MainActivity.this);
-
-        mMapView.onCreate(dialog.onSaveInstanceState());
-        mMapView.onResume();
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(final GoogleMap googleMap) {
-                mMap = googleMap;
-                LatLng goHere;
-                if (deliveryLatLng == null) {
-                    goHere = mDefaultLocation;
-                } else {
-                    goHere = deliveryLatLng;
-                }
-                Log.d(TAG, "onMapReady: Starting goHere: " + goHere.toString());
-                mMap.addMarker(new MarkerOptions().position(goHere).title("Deliver here!"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(goHere, DEFAULT_ZOOM));
-                mMap.getUiSettings().setZoomControlsEnabled(true);
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
-
-                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        deliveryLatLng = latLng;
-                        mMap.clear();
-                        mMap.addMarker(new MarkerOptions().position(deliveryLatLng).title("Deliver here!"));
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deliveryLatLng, DEFAULT_ZOOM));
-                        Toast.makeText(MainActivity.this, "Setting new delivery location: " + latLng.toString(), Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "onMapReady: New Delivery Latlng : " + deliveryLatLng.toString());
-                    }
-                });
-
-
-
-            }
-        });
-
-        TextView tvDialogMap = dialog.findViewById(R.id.tv_map_point);
-        tvDialogMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
 
     @Override
     protected void onStart() {
@@ -320,11 +271,15 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
+
                             if (mLastKnownLocation != null) {
                                 mDefaultLocation = new LatLng(mLastKnownLocation.getLatitude(),
                                         mLastKnownLocation.getLongitude());
-                                mMap.addMarker(new MarkerOptions().position(mDefaultLocation).title("Deliver here!"));
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("deliveryLocationLat", mDefaultLocation.toString());
+//                                mMap.addMarker(new MarkerOptions().position(mDefaultLocation).title("Deliver here!"));
+//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
