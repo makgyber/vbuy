@@ -1,5 +1,7 @@
 package com.makgyber.vbuys.models;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 
 public class Tindahan {
@@ -11,14 +13,14 @@ public class Tindahan {
     private String deliveryOptions;
     private Boolean publish;
     private String id;
-    private ArrayList<String> serviceArea;
+    private GeoPoint position;
 
 
     public Tindahan() {
         //need empty constructor
     }
 
-    public Tindahan(String tindahanName, String owner, String contactInfo, String address, String paymentOptions, String deliveryOptions, Boolean publish, ArrayList<String> serviceArea) {
+    public Tindahan(String tindahanName, String owner, String contactInfo, String address, String paymentOptions, String deliveryOptions, Boolean publish, GeoPoint position) {
         this.tindahanName = tindahanName;
         this.owner = owner;
         this.contactInfo = contactInfo;
@@ -26,7 +28,7 @@ public class Tindahan {
         this.paymentOptions = paymentOptions;
         this.deliveryOptions = deliveryOptions;
         this.publish = publish;
-        this.serviceArea = serviceArea;
+        this.position = position;
     }
 
     public String getTindahanName() {
@@ -49,10 +51,6 @@ public class Tindahan {
         return publish;
     }
 
-    public ArrayList<String> getServiceArea() {
-        return serviceArea;
-    }
-
     public String getPaymentOptions() {
         return paymentOptions;
     }
@@ -67,5 +65,9 @@ public class Tindahan {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public GeoPoint getPosition() {
+        return position;
     }
 }

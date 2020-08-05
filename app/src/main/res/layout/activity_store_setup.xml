@@ -29,7 +29,9 @@
                 android:id="@+id/s_feature_me"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="Publish me" />
+
             <TextView
                 android:layout_below="@+id/s_feature_me"
                 android:id="@+id/tv_name_label"
@@ -56,14 +58,15 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_below="@+id/tv_address_label"
-                android:id="@+id/tiet_address"
+                android:id="@+id/txt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Makati, MM"
+                android:clickable="true"
                 android:singleLine="true" />
 
             <TextView
-                android:layout_below="@+id/tiet_address"
+                android:layout_below="@+id/txt_address"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,7 +76,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_below="@+id/tv_contact_info_label"
-                android:id="@+id/tiet_contact_info"
+                android:id="@+id/txt_contact_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="mystore@gmail.com, 09991234567, 88771234"
@@ -81,7 +84,7 @@
 
 
             <TextView
-                android:layout_below="@+id/tiet_contact_info"
+                android:layout_below="@+id/txt_contact_info"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,14 +94,14 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_below="@+id/tv_delivery_options"
-                android:id="@+id/tiet_delivery_options"
+                android:id="@+id/txt_delivery_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Store Pickup, Lalamove, Grab, Speedy"
                 android:singleLine="false" />
 
             <TextView
-                android:layout_below="@+id/tiet_delivery_options"
+                android:layout_below="@+id/txt_delivery_mode"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,14 +111,14 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_below="@+id/tv_payment_options"
-                android:id="@+id/tiet_payment_options"
+                android:id="@+id/txt_payment_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Bank Statement, GCash, COD"
                 android:singleLine="false" />
 
             <TextView
-                android:layout_below="@+id/tiet_payment_options"
+                android:layout_below="@+id/txt_payment_options"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

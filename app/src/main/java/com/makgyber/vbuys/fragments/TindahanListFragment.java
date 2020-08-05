@@ -78,6 +78,7 @@ public class TindahanListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), StoreSetupActivity.class));
+
             }
         });
         getInventoryList(view);

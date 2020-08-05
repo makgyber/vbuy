@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +62,8 @@ public class SellerMainActivity extends AppCompatActivity {
                         loadFragment(new TindahanListFragment());
                         return true;
                     case R.id.seller_inventory:
-                        startActivity(new Intent(SellerMainActivity.this, InventoryActivity.class));
+//                        startActivity(new Intent(SellerMainActivity.this, InventoryActivity.class));
+
                         return true;
                 }
                 return false;
@@ -112,5 +115,11 @@ public class SellerMainActivity extends AppCompatActivity {
         transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onNavigateUpFromChild(Activity child) {
+        Toast.makeText(SellerMainActivity.this, "I come from :  " + child.getLocalClassName().toString(), Toast.LENGTH_SHORT).show();
+        return super.onNavigateUpFromChild(child);
     }
 }
