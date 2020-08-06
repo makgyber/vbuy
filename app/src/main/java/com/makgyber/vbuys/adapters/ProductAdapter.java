@@ -43,8 +43,13 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             @Override
             public void onClick(View v) {
                 String product_id = model.getId();
+
                 Intent intent = new Intent(v.getContext(), InventoryDetailActivity.class );
                 intent.putExtra("PRODUCT_ID", product_id);
+                intent.putExtra("TINDAHAN_ID", model.getTindahanId());
+                intent.putExtra("TINDAHAN_NAME", model.getTindahanName());
+                intent.putExtra("TINDAHAN_LATITUDE", Double.toString(model.getPosition().getLatitude()));
+                intent.putExtra("TINDAHAN_LONGITUDE",  Double.toString(model.getPosition().getLongitude()));
                 v.getContext().startActivity(intent);
             }
         });

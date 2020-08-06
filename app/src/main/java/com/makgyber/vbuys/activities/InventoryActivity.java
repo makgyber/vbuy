@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,6 +29,7 @@ public class InventoryActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference productRef = db.collection("product");
     private ProductAdapter adapter;
+    private String storeId = "", tindahanName, tindahanLatitude, tindahanLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,23 @@ public class InventoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_inventory);
         getSupportActionBar().setTitle("Inventory");
+
+        if (getIntent().hasExtra("TINDAHAN_ID")) {
+            storeId = getIntent().getExtras().get("TINDAHAN_ID").toString();
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_NAME")) {
+            tindahanName = getIntent().getExtras().get("TINDAHAN_NAME").toString();
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_LATITUDE")) {
+            tindahanLatitude = getIntent().getExtras().get("TINDAHAN_LATITUDE").toString();
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_LONGITUDE")) {
+            tindahanLongitude = getIntent().getExtras().get("TINDAHAN_LONGITUDE").toString();
+        }
+
         getInventoryList();
     }
 
@@ -53,6 +72,10 @@ public class InventoryActivity extends AppCompatActivity {
         if (id == R.id.inventory_add) {
             Intent intent = new Intent(InventoryActivity.this, InventoryDetailActivity.class);
             intent.putExtra("PRODUCT_ID", "0");
+            intent.putExtra("TINDAHAN_ID", storeId);
+            intent.putExtra("TINDAHAN_NAME", tindahanName);
+            intent.putExtra("TINDAHAN_LATITUDE", tindahanLatitude);
+            intent.putExtra("TINDAHAN_LONGITUDE", tindahanLongitude);
             startActivity(intent);
             finish();
             return true;
@@ -62,10 +85,8 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void getInventoryList() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
-        String storeId = sharedPreferences.getString("tindahanId", "");
         Query query = productRef.whereEqualTo("tindahanId", storeId);
-
+        Log.d("InventoryActivity", "getInventoryList: STORE: " + storeId);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, new SnapshotParser<Product>() {
                     @NonNull

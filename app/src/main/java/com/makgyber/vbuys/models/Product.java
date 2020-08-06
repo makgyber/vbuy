@@ -1,5 +1,7 @@
 package com.makgyber.vbuys.models;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.List;
 
 public class Product {
@@ -19,9 +21,9 @@ public class Product {
     private Double price;
     private Boolean publish;
     private List<String> tags;
-    private List<String> serviceArea;
     private String imageUri;
     private String category;
+    private GeoPoint position;
 
     public Product() {
         //need empty constructor
@@ -34,9 +36,9 @@ public class Product {
                    Double price,
                    Boolean publish,
                    List<String> tags,
-                   List<String> serviceArea,
                    String imageUri,
-                   String category) {
+                   String category,
+                   GeoPoint position) {
         this.productName = productName;
         this.description = description;
         this.tindahanName = tindahanName;
@@ -44,9 +46,9 @@ public class Product {
         this.price = price;
         this.publish = publish;
         this.tags = tags;
-        this.serviceArea = serviceArea;
         this.imageUri = imageUri;
         this.category = category;
+        this.position = position;
     }
 
     public String getProductName() {
@@ -73,10 +75,6 @@ public class Product {
         return tags;
     }
 
-    public List<String> getServiceArea() {
-        return serviceArea;
-    }
-
     public Double getPrice() {
         return price;
     }
@@ -95,5 +93,13 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public GeoPoint getPosition() {
+        return position;
+    }
+
+    public void setPosition(GeoPoint position) {
+        this.position = position;
     }
 }

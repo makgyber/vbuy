@@ -28,10 +28,12 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -66,7 +68,7 @@ public class InventoryDetailActivity extends AppCompatActivity {
     ImageView productImage;
     Boolean imageUpdated = false;
     ProgressBar spinner;
-    String tindahanName, tindahanId, tindahanServiceArea, tindahanContactInfo;
+    String tindahanName, tindahanId, tindahanPayment, tindahanLatitude, tindahanLongitude;
     ChipGroup categoryGroup;
     Chip foodChip, deliveryChip, devicesChip, servicesChip;
     Switch featureSwitch;
@@ -81,6 +83,22 @@ public class InventoryDetailActivity extends AppCompatActivity {
         if (getIntent().hasExtra("PRODUCT_ID")) {
             productId = getIntent().getExtras().get("PRODUCT_ID").toString();
             populateProductForm(productId);
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_ID")) {
+            tindahanId = getIntent().getExtras().get("TINDAHAN_ID").toString();
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_NAME")) {
+            tindahanName = getIntent().getExtras().get("TINDAHAN_NAME").toString();
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_LATITUDE")) {
+            tindahanLatitude = getIntent().getExtras().get("TINDAHAN_LATITUDE").toString();
+        }
+
+        if (getIntent().hasExtra("TINDAHAN_LONGITUDE")) {
+            tindahanLongitude = getIntent().getExtras().get("TINDAHAN_LONGITUDE").toString();
         }
 
         name = (TextInputEditText) findViewById(R.id.name);
@@ -271,8 +289,6 @@ public class InventoryDetailActivity extends AppCompatActivity {
         spinner.setVisibility(View.VISIBLE);
         List<String> tagsList = Arrays.asList(tags.getText().toString().split(","));
         tagsList.replaceAll(String::trim);
-        List<String> saList = Arrays.asList(tindahanServiceArea.split(","));
-        saList.replaceAll(String::trim);
 
         Product product = new Product(
                 name.getText().toString(),
@@ -282,9 +298,9 @@ public class InventoryDetailActivity extends AppCompatActivity {
                 Double.parseDouble(price.getText().toString()),
                 featureSwitch.isChecked(),
                 tagsList,
-                saList,
                 "",
-                selectedCategory);
+                selectedCategory,
+                new GeoPoint(Double.parseDouble(tindahanLatitude), Double.parseDouble(tindahanLongitude)));
 
         Log.d(TAG, "saveProduct: " + product.getProductName());
 
@@ -314,7 +330,9 @@ public class InventoryDetailActivity extends AppCompatActivity {
                     "tags", product.getTags(),
                     "tindahanName", product.getTindahanName(),
                     "category", product.getCategory(),
-                    "publish", product.getPublish()
+                    "publish", product.getPublish(),
+                    "position", product.getPosition(),
+                    "tindahanId", product.getTindahanId()
                     )
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -343,12 +361,6 @@ public class InventoryDetailActivity extends AppCompatActivity {
     }
 
     private void getTindahanDetailsFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
-        tindahanName = sharedPreferences.getString("tindahanName", "walang tindahan");
-        tindahanId = sharedPreferences.getString("tindahanId", "walang laman");
-        tindahanContactInfo = sharedPreferences.getString("contactInfo", "");
-        tindahanServiceArea = sharedPreferences.getString("serviceArea", "");
 
-        Log.d(TAG, "getTindahanDetailsFromSharedPreferences: " + tindahanName + " " + tindahanServiceArea);
     }
 }

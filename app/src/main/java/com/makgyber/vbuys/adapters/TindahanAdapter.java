@@ -42,6 +42,9 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
                 String tindahanId = model.getId();
                 Intent intent = new Intent(v.getContext(), InventoryActivity.class );
                 intent.putExtra("TINDAHAN_ID", tindahanId);
+                intent.putExtra("TINDAHAN_NAME", model.getTindahanName());
+                intent.putExtra("TINDAHAN_LATITUDE", model.getPosition().getLatitude());
+                intent.putExtra("TINDAHAN_LONGITUDE", model.getPosition().getLongitude());
                 v.getContext().startActivity(intent);
             }
         });
