@@ -57,6 +57,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.makgyber.vbuys.adapters.ProductAdapter;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
+import com.makgyber.vbuys.fragments.ChatFragment;
 import com.makgyber.vbuys.fragments.ProfileFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_feedback:
                         return true;
                     case R.id.action_messages:
-//                        startActivity(new Intent(MainActivity.this, MapsActivity.class));
+                        loadFragment(new ChatFragment());
                         return true;
                 }
                 return false;

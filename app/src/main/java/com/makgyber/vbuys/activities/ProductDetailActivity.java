@@ -3,14 +3,21 @@ package com.makgyber.vbuys.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -18,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makgyber.vbuys.R;
+import com.makgyber.vbuys.models.Chat;
 import com.squareup.picasso.Picasso;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -26,6 +34,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference dbRef = db.collection(COLLECTION);
+    CollectionReference chatRef = db.collection("chat");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser mUser = mAuth.getCurrentUser();
 
@@ -40,6 +49,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     TextView tvProductName, tvDescription, tvPrice, tvTindahanName, tvDeliveryOptions, tvPaymentOptions, tvContactInfo;
     ImageView ivProduct;
+    Button bMessageSeller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +106,37 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvPrice.setText("Php " + productPrice);
         Picasso.get().load(productImageUri).fit().into(ivProduct);
 
+        bMessageSeller = findViewById(R.id.btn_message_seller);
+        bMessageSeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createChatSession();
+            }
+        });
+
         populateTindahan();
 
+    }
+
+    private void createChatSession() {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+        String userProfileId = sharedPreferences.getString("userId", "");
+        String displayName = sharedPreferences.getString("displayName", "no name");
+        String photoUrl = sharedPreferences.getString("photoUrl", "");
+
+        DocumentReference docRef = chatRef.document();
+        String newId = chatRef.document().getId();
+        Chat chat = new Chat(newId, productName, userProfileId, displayName, photoUrl, tindahanId, tindahanName, photoUrl, Timestamp.now());
+        docRef.set(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getApplicationContext(), "New session created", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                intent.putExtra("chatId", newId);
+                intent.putExtra("topic", productName);
+                startActivity(intent);
+            }
+        });
     }
 
     private void populateTindahan() {
