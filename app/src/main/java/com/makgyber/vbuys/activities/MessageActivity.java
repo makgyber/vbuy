@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +63,7 @@ public class MessageActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(topic);
         getSupportActionBar().setSubtitle(talker);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         edtContent = findViewById(R.id.edt_content);
 
@@ -74,6 +77,23 @@ public class MessageActivity extends AppCompatActivity {
 
         getMessageList();
         prepareProfileImage();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.message_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            this.onBackPressed();
+            return true;
+        }
+
+        return false;
     }
 
     private void prepareProfileImage() {
