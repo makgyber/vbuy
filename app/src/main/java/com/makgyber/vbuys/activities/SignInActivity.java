@@ -151,7 +151,7 @@ public class SignInActivity extends AppCompatActivity {
         String email = user.getEmail().isEmpty() ? "my email" : user.getEmail();
         String displayName = user.getDisplayName().isEmpty() ? "" : user.getDisplayName();
         String phoneNumber = user.getPhoneNumber().isEmpty() ? "my phone" : user.getPhoneNumber();
-        String photoUrl = user.getPhotoUrl() == null ? "" : user.getPhotoUrl().toString();
+        String photoUrl = user.getPhotoUrl() == null ? "https://firebasestorage.googleapis.com/v0/b/villagebuys-13fa9.appspot.com/o/images%2Fusers%2FiOWv9iplGZC29sd1EJSb.jpg?alt=media&token=6487b466-5377-4589-b621-76809228188e" : user.getPhotoUrl().toString();
         String address = "my city";
         String facebook = "my facebook";
         String twitter = "my twitter";

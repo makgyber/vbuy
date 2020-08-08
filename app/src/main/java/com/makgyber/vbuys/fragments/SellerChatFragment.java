@@ -2,17 +2,16 @@ package com.makgyber.vbuys.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
@@ -24,25 +23,23 @@ import com.google.firebase.firestore.Query;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ChatAdapter;
 import com.makgyber.vbuys.adapters.SellerChatAdapter;
-import com.makgyber.vbuys.adapters.TindahanAdapter;
 import com.makgyber.vbuys.models.Chat;
-import com.makgyber.vbuys.models.Tindahan;
 
 import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ChatFragment#newInstance} factory method to
+ * Use the {@link SellerChatFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChatFragment extends Fragment {
-    private final String TAG="ChatFragment";
+public class SellerChatFragment extends Fragment {
+    private final String TAG="SellerChatFragment";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference chatRef = db.collection("chat");
-    private ChatAdapter adapter;
+    private SellerChatAdapter adapter;
 
-    public ChatFragment() {
+    public SellerChatFragment() {
         // Required empty public constructor
     }
 
@@ -50,8 +47,8 @@ public class ChatFragment extends Fragment {
      * @return A new instance of fragment ChatFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ChatFragment newInstance() {
-        ChatFragment fragment = new ChatFragment();
+    public static SellerChatFragment newInstance() {
+        SellerChatFragment fragment = new SellerChatFragment();
         return fragment;
     }
 
@@ -70,14 +67,15 @@ public class ChatFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChatList(view);
+
+        getSellerChatList(view);
     }
 
-    private void getChatList(View vw) {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId", "");
-        Log.d(TAG, "getChatList: UserId - " + userId);
-        Query query = chatRef.whereEqualTo("buyerId", userId);
+    private void getSellerChatList(View vw) {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
+        String storeId = sharedPreferences.getString("tindahanId", "");
+        Log.d(TAG, "getSellerChatList: StoreId - " + storeId);
+        Query query = chatRef.whereEqualTo("storeId", storeId);
 
         FirestoreRecyclerOptions<Chat> options = new FirestoreRecyclerOptions.Builder<Chat>()
                 .setQuery(query, new SnapshotParser<Chat>() {
@@ -91,7 +89,7 @@ public class ChatFragment extends Fragment {
                 })
                 .build();
 
-        adapter = new ChatAdapter(options);
+        adapter = new SellerChatAdapter(options);
 
         RecyclerView recyclerView = vw.findViewById(R.id.rv_chat);
         recyclerView.setHasFixedSize(true);

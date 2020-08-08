@@ -1,16 +1,13 @@
 package com.makgyber.vbuys.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,20 +22,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.MessageAdapter;
-import com.makgyber.vbuys.adapters.ProductAdapter;
+import com.makgyber.vbuys.adapters.SellerMessageAdapter;
 import com.makgyber.vbuys.models.Message;
-import com.makgyber.vbuys.models.Product;
 
 public class MessageActivity extends AppCompatActivity {
 
-    String chatId, topic;
+    String chatId, topic, persona, talker, profileImage;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference messageRef = db.collection("message");
     private MessageAdapter adapter;
+    private SellerMessageAdapter sellerAdapter;
     private Button btnSend;
     private EditText edtContent;
     RecyclerView recyclerView;
+    private final static String defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/villagebuys-13fa9.appspot.com/o/images%2Fusers%2FiOWv9iplGZC29sd1EJSb.jpg?alt=media&token=6487b466-5377-4589-b621-76809228188e";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +51,16 @@ public class MessageActivity extends AppCompatActivity {
             topic = getIntent().getExtras().get("topic").toString();
         }
 
+        if (getIntent().hasExtra("talker")) {
+            talker = getIntent().getExtras().get("talker").toString();
+        }
+
+        if (getIntent().hasExtra("persona")) {
+            persona = getIntent().getExtras().get("persona").toString();
+        }
+
         getSupportActionBar().setTitle(topic);
+        getSupportActionBar().setSubtitle(talker);
 
         edtContent = findViewById(R.id.edt_content);
 
@@ -66,18 +73,32 @@ public class MessageActivity extends AppCompatActivity {
         });
 
         getMessageList();
+        prepareProfileImage();
+    }
+
+    private void prepareProfileImage() {
+        if (persona.equalsIgnoreCase("buyer")) {
+            SharedPreferences sharedUserPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+            profileImage = sharedUserPreferences.getString("photoUrl",  defaultProfileImage);
+        } else {
+            SharedPreferences sharedStorePreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
+            profileImage = sharedStorePreferences.getString("tindahanLogo",  defaultProfileImage);
+        }
     }
 
     private void createMessage(View v) {
         if (!edtContent.getText().toString().isEmpty()) {
-            Message newMesg = new Message(chatId, Timestamp.now(), "buyer", edtContent.getText().toString());
+            Message newMesg = new Message(chatId, Timestamp.now(), persona, edtContent.getText().toString(), profileImage);
             messageRef.document().set(newMesg).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     edtContent.setText("");
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                    if(persona.equalsIgnoreCase("seller")) {
+                        recyclerView.scrollToPosition(sellerAdapter.getItemCount() - 1);
+                    } else {
+                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                    }
+
                 }
             });
         }
@@ -97,13 +118,22 @@ public class MessageActivity extends AppCompatActivity {
                 })
                 .build();
 
-        adapter = new MessageAdapter(options);
+
 
         recyclerView = findViewById(R.id.rv_messages);
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager llman = new LinearLayoutManager(MessageActivity.this);
+        llman.setStackFromEnd(true);
         recyclerView.setLayoutManager(llman);
-        recyclerView.setAdapter(adapter);
+
+        if (persona.equalsIgnoreCase("seller")) {
+            sellerAdapter = new SellerMessageAdapter(options);
+            recyclerView.setAdapter(sellerAdapter);
+        } else {
+            adapter = new MessageAdapter(options);
+            recyclerView.setAdapter(adapter);
+        }
+
 
     }
 
@@ -111,13 +141,23 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if (persona.equalsIgnoreCase("buyer")) {
+            adapter.stopListening();
+        } else {
+            sellerAdapter.stopListening();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
-        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        if (persona.equalsIgnoreCase("buyer")) {
+            adapter.startListening();
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        } else {
+            sellerAdapter.startListening();
+            recyclerView.scrollToPosition(sellerAdapter.getItemCount() - 1);
+        }
+
     }
 }

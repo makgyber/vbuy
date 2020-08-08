@@ -1,6 +1,5 @@
 package com.makgyber.vbuys.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -37,7 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.models.Tindahan;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +44,7 @@ public class StoreSetupActivity extends AppCompatActivity {
     private final static String COLLECTION = "tindahan";
     private final static int AUTOCOMPLETE_REQUEST_CODE = 2;
     private final static String TAG = "StoreSetupActivity";
+
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -56,7 +55,7 @@ public class StoreSetupActivity extends AppCompatActivity {
     TextInputEditText mTindahanName, mTindahanId, mOwner, mAddress, mContactInfo, mServiceArea, mDeliveryOptions, mPaymentOptions;
     Switch sPublish;
     Boolean storeExists = false;
-    String storeId;
+    String storeId, tindahanLogo;
     String owner = "0";
     GeoPoint tindahanPosition;
 
@@ -199,7 +198,7 @@ public class StoreSetupActivity extends AppCompatActivity {
         Boolean publish = sPublish.isChecked();
 
         final Tindahan tindahan = new Tindahan(tindahanName, owner, contactInfo, address,
-                paymentOptions, deliveryOptions, publish, tindahanPosition);
+                paymentOptions, deliveryOptions, publish, tindahanPosition, tindahanLogo);
 
         dbRef.document(storeId).set(tindahan)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -230,6 +229,7 @@ public class StoreSetupActivity extends AppCompatActivity {
         editor.putString("tindahanAddress", mAddress.getText().toString());
         editor.putString("tindahanLat", Double.toString(tindahanPosition.getLatitude()) );
         editor.putString("tindahanLng", Double.toString(tindahanPosition.getLongitude()));;
+        editor.putString("tindahanLogo", tindahanLogo);;
         editor.commit();
 
     }

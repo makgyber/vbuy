@@ -96,7 +96,6 @@ public class TindahanListFragment extends Fragment {
                     @Override
                     public Tindahan parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                         Tindahan tindahan = snapshot.toObject(Tindahan.class);
-                        Log.d(TAG, "getInventoryList: StoreId - " + snapshot.getId() );
                         tindahan.setId( snapshot.getId() );
                         return tindahan;
                     }

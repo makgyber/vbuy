@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ProductAdapter;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
+import com.makgyber.vbuys.fragments.ChatFragment;
 import com.makgyber.vbuys.fragments.ProfileFragment;
 import com.makgyber.vbuys.fragments.TindahanListFragment;
 
@@ -52,16 +53,16 @@ public class SellerMainActivity extends AppCompatActivity {
                     case R.id.seller_dashboard:
 //                        loadFragment(new ProfileFragment());
                         return true;
-                    case R.id.seller_messages:
-
+//                    case R.id.seller_messages:
+//                        loadFragment(new ChatFragment());
 //                        startActivity(new Intent(SellerMainActivity.this, StoreSetupActivity.class));
-                        return true;
+//                        return true;
                     case R.id.seller_orders:
                         return true;
                     case R.id.seller_settings:
                         loadFragment(new TindahanListFragment());
                         return true;
-                    case R.id.seller_inventory:
+                    case R.id.seller_feedback:
 //                        startActivity(new Intent(SellerMainActivity.this, InventoryActivity.class));
 
                         return true;

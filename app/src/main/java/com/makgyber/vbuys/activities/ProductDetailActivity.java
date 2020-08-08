@@ -89,7 +89,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             tindahanName = getIntent().getExtras().get("PRODUCT_TINDAHAN_NAME").toString();
         }
 
-        Log.d(TAG, "onCreate: PRODUCT_ID" + productId);
+        Log.d(TAG, "onCreate: PRODUCT_ID " + productId);
 
         tvProductName = findViewById(R.id.product_detail_name);
         tvDescription = findViewById(R.id.product_detail_description);
@@ -104,7 +104,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductName.setText(productName);
         tvDescription.setText(productDescription);
         tvPrice.setText("Php " + productPrice);
-        Picasso.get().load(productImageUri).fit().into(ivProduct);
+        Picasso.get().load(productImageUri).centerCrop().into(ivProduct);
 
         bMessageSeller = findViewById(R.id.btn_message_seller);
         bMessageSeller.setOnClickListener(new View.OnClickListener() {
@@ -124,9 +124,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         String displayName = sharedPreferences.getString("displayName", "no name");
         String photoUrl = sharedPreferences.getString("photoUrl", "");
 
+        Log.d(TAG, "createChatSession: tindahanId " + tindahanId);
+        Log.d(TAG, "createChatSession: tindahanName " + tindahanName);
+
         DocumentReference docRef = chatRef.document();
         String newId = chatRef.document().getId();
         Chat chat = new Chat(newId, productName, userProfileId, displayName, photoUrl, tindahanId, tindahanName, photoUrl, Timestamp.now());
+
         docRef.set(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -140,7 +144,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void populateTindahan() {
-
+        Log.d(TAG, "populateTindahan: tindahanId " + tindahanId);
         final DocumentReference docRef = db.collection(COLLECTION).document(tindahanId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -150,7 +154,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                     if (document.exists()) {
                         tvTindahanName.setText("Sold by: " + document.get("tindahanName").toString());
                         tvContactInfo.setText("Contact Info:\n" + document.get("contactInfo").toString());
-                        String sArea = document.get("serviceArea").toString();
+
                         if (document.get("deliveryOptions") != null)
                             tvDeliveryOptions.setText("Delivery Options:\n" + document.get("deliveryOptions").toString());
                         if (document.get("paymentOptions") != null)

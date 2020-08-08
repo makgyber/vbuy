@@ -1,10 +1,8 @@
 package com.makgyber.vbuys.adapters;
 
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.TimeZone;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -23,9 +20,9 @@ import com.makgyber.vbuys.models.Message;
 import com.squareup.picasso.Picasso;
 
 
-public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAdapter.MessageHolder> {
+public class SellerMessageAdapter extends FirestoreRecyclerAdapter<Message, SellerMessageAdapter.MessageHolder> {
 
-    public MessageAdapter(@NonNull FirestoreRecyclerOptions<Message> options) {
+    public SellerMessageAdapter(@NonNull FirestoreRecyclerOptions<Message> options) {
         super(options);
     }
 
@@ -43,7 +40,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageAda
     @Override
     public int getItemViewType(int position) {
         Message model = getItem(position);
-        if (model.getSenderType().equalsIgnoreCase("buyer")) {
+        if (model.getSenderType().equalsIgnoreCase("seller")) {
             return 1;
         } else {
             return 2;

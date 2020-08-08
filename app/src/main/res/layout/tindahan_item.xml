@@ -28,7 +28,8 @@
             android:layout_margin="10dp"
             android:drawableTop="@drawable/ic_settings_primary_24dp"
             android:text="Settings"
-            android:layout_alignParentEnd="true"/>
+            android:layout_toLeftOf="@+id/tv_messages"
+            />
 
         <TextView
             android:id="@+id/tv_inventory"
@@ -38,6 +39,16 @@
             android:drawableTop="@drawable/ic_inventory_primary_24dp"
             android:text="Inventory"
             android:layout_toLeftOf="@+id/tv_settings"/>
+
+        <TextView
+            android:id="@+id/tv_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:drawableTop="@drawable/ic_chat_reddish_24dp"
+            android:text="Messages"
+            android:layout_alignParentEnd="true"
+            />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

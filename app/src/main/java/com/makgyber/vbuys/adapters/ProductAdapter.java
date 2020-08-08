@@ -43,7 +43,9 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
             @Override
             public void onClick(View v) {
                 String product_id = model.getId();
-
+                Log.d("ProductAdapter", "onClick: product_id " + product_id);
+                Log.d("ProductAdapter", "onClick: TINDAHAN_ID " + model.getTindahanId());
+                Log.d("ProductAdapter", "onClick: TINDAHAN_NAME " + model.getProductName());
                 Intent intent = new Intent(v.getContext(), InventoryDetailActivity.class );
                 intent.putExtra("PRODUCT_ID", product_id);
                 intent.putExtra("TINDAHAN_ID", model.getTindahanId());

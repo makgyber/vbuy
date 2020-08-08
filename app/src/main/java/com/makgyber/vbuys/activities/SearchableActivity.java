@@ -122,7 +122,6 @@ public class SearchableActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        Log.d(TAG, "onNewIntent: ");
         handleIntent(intent);
     }
 

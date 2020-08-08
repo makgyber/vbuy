@@ -21,9 +21,9 @@ import com.makgyber.vbuys.activities.MessageActivity;
 import com.makgyber.vbuys.models.Chat;
 import com.squareup.picasso.Picasso;
 
-public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.ChatHolder> {
+public class SellerChatAdapter extends FirestoreRecyclerAdapter<Chat, SellerChatAdapter.ChatHolder> {
 
-    public ChatAdapter(@NonNull FirestoreRecyclerOptions<Chat> options) {
+    public SellerChatAdapter(@NonNull FirestoreRecyclerOptions<Chat> options) {
         super(options);
     }
 
@@ -32,13 +32,12 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
         Log.d("TAG", "onBindViewHolder: " + model.getId());
 
         holder.tvTopic.setText(model.getTopic());
-
-        Log.d("ChatAdapter", "onBindViewHolder: BUYER");
-
-        holder.tvStoreName.setText(model.getStoreName());
-        if (model.getStoreImage() != null && !model.getStoreImage().toString().isEmpty()) {
-            Picasso.get().load(model.getStoreImage().toString()).centerCrop().resize(200, 200).into(holder.ivProfileImage);
+        Log.d("ChatAdapter", "onBindViewHolder: SELLER");
+        holder.tvStoreName.setText(model.getBuyerName());
+        if (model.getBuyerImage() != null && !model.getBuyerImage().toString().isEmpty()) {
+            Picasso.get().load(model.getBuyerImage().toString()).centerCrop().resize(200, 200).into(holder.ivProfileImage);
         }
+
 
         holder.tvTimestamp.setText(formatDate(model.getDateCreated()));
         holder.chatId = model.getId();
@@ -50,8 +49,8 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
                 Intent intent = new Intent(v.getContext(), MessageActivity.class );
                 intent.putExtra("chatId", chat_id);
                 intent.putExtra("topic", model.getTopic());
-                intent.putExtra("persona", "buyer");
-                intent.putExtra("talker", model.getStoreName());
+                intent.putExtra("persona", "seller");
+                intent.putExtra("talker", model.getBuyerName());
                 v.getContext().startActivity(intent);
             }
         });

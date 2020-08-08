@@ -8,14 +8,17 @@ public class Message {
     private Timestamp dateCreated;
     private String senderType;
     private String content;
+    private String imageUri;
+
 
     public Message() {}
 
-    public Message(String chatId, Timestamp dateCreated, String senderType, String content) {
+    public Message(String chatId, Timestamp dateCreated, String senderType, String content, String imageUri) {
         this.chatId = chatId;
         this.dateCreated = dateCreated;
         this.senderType = senderType;
         this.content = content;
+        this.imageUri = imageUri;
     }
 
 
@@ -33,5 +36,9 @@ public class Message {
 
     public String getChatId() {
         return chatId;
+    }
+
+    public String getImageUri() {
+        return imageUri;
     }
 }
