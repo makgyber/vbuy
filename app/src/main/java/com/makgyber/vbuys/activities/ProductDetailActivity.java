@@ -27,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.models.Chat;
+import com.makgyber.vbuys.models.Message;
+import com.makgyber.vbuys.models.Tindahan;
 import com.squareup.picasso.Picasso;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -36,6 +38,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference dbRef = db.collection(COLLECTION);
     CollectionReference chatRef = db.collection("chat");
+    CollectionReference messageRef = db.collection("message");
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser mUser = mAuth.getCurrentUser();
 
@@ -116,7 +119,23 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
 
         populateTindahan();
+        checkIfOwner();
+    }
 
+    private void checkIfOwner() {
+        dbRef.document(tindahanId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+                        String userProfileId = sharedPreferences.getString("userId", "");
+                        bMessageSeller.setEnabled(!document.get("owner").toString().equalsIgnoreCase(userProfileId));
+                    }
+                }
+            }
+        });
     }
 
     private void createChatSession() {
@@ -124,9 +143,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         String userProfileId = sharedPreferences.getString("userId", "");
         String displayName = sharedPreferences.getString("displayName", "no name");
         String photoUrl = sharedPreferences.getString("photoUrl", "");
-
-        Log.d(TAG, "createChatSession: tindahanId " + tindahanId);
-        Log.d(TAG, "createChatSession: tindahanName " + tindahanName);
 
         String chatId = userProfileId + tindahanId;
         DocumentReference docRef = chatRef.document(chatId);
@@ -137,28 +153,35 @@ public class ProductDetailActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                        intent.putExtra("chatId", chatId);
-                        intent.putExtra("topic", tindahanName);
-                        intent.putExtra("persona", "buyer");
-                        startActivity(intent);
+                        switchToChatPanel(chatId, photoUrl);
                     } else {
                         //no record found,
                         docRef.set(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getApplicationContext(), "New session created", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                                intent.putExtra("chatId", chatId);
-                                intent.putExtra("topic", tindahanName);
-                                intent.putExtra("persona", "buyer");
-                                startActivity(intent);
+                               switchToChatPanel(chatId, photoUrl);
                             }
                         });
                     }
                 }
             }
         });
+    }
+
+    private void switchToChatPanel(String chatId, String profileImage) {
+        Message newMesg = new Message(chatId, Timestamp.now(), "buyer", productName, profileImage);
+        messageRef.document().set(newMesg).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                intent.putExtra("chatId", chatId);
+                intent.putExtra("topic", tindahanName);
+                intent.putExtra("persona", "buyer");
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void populateTindahan() {
