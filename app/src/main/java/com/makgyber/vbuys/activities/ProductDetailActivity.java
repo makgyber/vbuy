@@ -24,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.models.Chat;
 import com.squareup.picasso.Picasso;
@@ -127,18 +128,35 @@ public class ProductDetailActivity extends AppCompatActivity {
         Log.d(TAG, "createChatSession: tindahanId " + tindahanId);
         Log.d(TAG, "createChatSession: tindahanName " + tindahanName);
 
-        DocumentReference docRef = chatRef.document();
-        String newId = chatRef.document().getId();
-        Chat chat = new Chat(newId, productName, userProfileId, displayName, photoUrl, tindahanId, tindahanName, photoUrl, Timestamp.now());
-
-        docRef.set(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
+        String chatId = userProfileId + tindahanId;
+        DocumentReference docRef = chatRef.document(chatId);
+        Chat chat = new Chat(chatId, displayName + " + " + tindahanName, userProfileId, displayName, photoUrl, tindahanId, tindahanName, photoUrl, Timestamp.now());
+        chatRef.document(chatId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(getApplicationContext(), "New session created", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
-                intent.putExtra("chatId", newId);
-                intent.putExtra("topic", productName);
-                startActivity(intent);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                        intent.putExtra("chatId", chatId);
+                        intent.putExtra("topic", tindahanName);
+                        intent.putExtra("persona", "buyer");
+                        startActivity(intent);
+                    } else {
+                        //no record found,
+                        docRef.set(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(getApplicationContext(), "New session created", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                                intent.putExtra("chatId", chatId);
+                                intent.putExtra("topic", tindahanName);
+                                intent.putExtra("persona", "buyer");
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }
             }
         });
     }
