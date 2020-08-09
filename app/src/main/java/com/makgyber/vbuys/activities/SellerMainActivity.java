@@ -27,7 +27,9 @@ import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ProductAdapter;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
 import com.makgyber.vbuys.fragments.ChatFragment;
+import com.makgyber.vbuys.fragments.FeedbackFragment;
 import com.makgyber.vbuys.fragments.ProfileFragment;
+import com.makgyber.vbuys.fragments.SellerDashboardFragment;
 import com.makgyber.vbuys.fragments.TindahanListFragment;
 
 public class SellerMainActivity extends AppCompatActivity {
@@ -55,20 +57,13 @@ public class SellerMainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId()) {
                     case R.id.seller_dashboard:
-//                        loadFragment(new ProfileFragment());
-                        return true;
-//                    case R.id.seller_messages:
-//                        loadFragment(new ChatFragment());
-//                        startActivity(new Intent(SellerMainActivity.this, StoreSetupActivity.class));
-//                        return true;
-                    case R.id.seller_orders:
+                        loadFragment(new SellerDashboardFragment());
                         return true;
                     case R.id.seller_settings:
                         loadFragment(new TindahanListFragment());
                         return true;
                     case R.id.seller_feedback:
-//                        startActivity(new Intent(SellerMainActivity.this, InventoryActivity.class));
-
+                        loadFragment(new FeedbackFragment());
                         return true;
                 }
                 return false;
@@ -86,6 +81,8 @@ public class SellerMainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        loadFragment(new SellerDashboardFragment());
     }
 
     @Override

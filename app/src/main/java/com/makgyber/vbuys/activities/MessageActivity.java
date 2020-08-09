@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
@@ -35,7 +36,7 @@ public class MessageActivity extends AppCompatActivity {
     private CollectionReference messageRef = db.collection("message");
     private MessageAdapter adapter;
     private SellerMessageAdapter sellerAdapter;
-    private Button btnSend;
+    private ImageButton btnSend, btnImage;
     private EditText edtContent;
     RecyclerView recyclerView;
     private final static String defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/villagebuys-13fa9.appspot.com/o/images%2Fusers%2FiOWv9iplGZC29sd1EJSb.jpg?alt=media&token=6487b466-5377-4589-b621-76809228188e";

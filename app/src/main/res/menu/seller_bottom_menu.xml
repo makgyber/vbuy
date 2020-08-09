@@ -8,13 +8,6 @@
         />
 
     <item
-        android:id="@+id/seller_settings"
-        android:orderInCategory="1"
-        android:title="Store Setup"
-        android:icon="@drawable/ic_settings_black_24dp"
-        />
-
-    <item
         android:id="@+id/seller_feedback"
         android:orderInCategory="1"
         android:title="Feedback"
@@ -22,11 +15,18 @@
         />
 
     <item
-        android:id="@+id/seller_orders"
+        android:id="@+id/seller_settings"
         android:orderInCategory="1"
-        android:title="Orders"
-        android:icon="@drawable/ic_cart_white_24dp"
+        android:title="My Stores"
+        android:icon="@drawable/ic_store_mall_directory_pink_24dp"
         />
+
+<!--    <item-->
+<!--        android:id="@+id/seller_orders"-->
+<!--        android:orderInCategory="1"-->
+<!--        android:title="Orders"-->
+<!--        android:icon="@drawable/ic_cart_white_24dp"-->
+<!--        />-->
 
 <!--    <item-->
 <!--        android:id="@+id/seller_messages"-->
