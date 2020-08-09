@@ -1,7 +1,6 @@
 package com.makgyber.vbuys.adapters;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.TimeZone;
 import android.util.Log;
@@ -16,7 +15,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.Timestamp;
 import com.makgyber.vbuys.R;
-import com.makgyber.vbuys.activities.MainActivity;
 import com.makgyber.vbuys.activities.MessageActivity;
 import com.makgyber.vbuys.models.Chat;
 import com.squareup.picasso.Picasso;
@@ -33,14 +31,12 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
 
         holder.tvTopic.setText(model.getTopic());
 
-        Log.d("ChatAdapter", "onBindViewHolder: BUYER");
-        Log.d("ChatAdapter", "onBindViewHolder: seen? " + model.isSeen());
         holder.tvStoreName.setText(model.getStoreName());
         if (model.getStoreImage() != null && !model.getStoreImage().toString().isEmpty()) {
             Picasso.get().load(model.getStoreImage().toString()).centerCrop().resize(200, 200).into(holder.ivProfileImage);
         }
 
-        if (model.isSeen()) {
+        if (model.isBuyerSeen()) {
             holder.ivNewMessage.setVisibility(View.INVISIBLE);
         }
 
@@ -55,7 +51,8 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
                 intent.putExtra("chatId", chat_id);
                 intent.putExtra("topic", model.getTopic());
                 intent.putExtra("persona", "buyer");
-                intent.putExtra("talker", model.getStoreName());
+                intent.putExtra("talkerId", model.getStoreId());
+                intent.putExtra("talkerName", model.getStoreName());
                 v.getContext().startActivity(intent);
             }
         });

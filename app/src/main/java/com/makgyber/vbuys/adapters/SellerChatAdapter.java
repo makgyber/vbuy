@@ -38,6 +38,9 @@ public class SellerChatAdapter extends FirestoreRecyclerAdapter<Chat, SellerChat
             Picasso.get().load(model.getBuyerImage().toString()).centerCrop().resize(200, 200).into(holder.ivProfileImage);
         }
 
+        if (model.isSellerSeen()) {
+            holder.ivNewMessage.setVisibility(View.INVISIBLE);
+        }
 
         holder.tvTimestamp.setText(formatDate(model.getDateCreated()));
         holder.chatId = model.getId();
@@ -50,7 +53,8 @@ public class SellerChatAdapter extends FirestoreRecyclerAdapter<Chat, SellerChat
                 intent.putExtra("chatId", chat_id);
                 intent.putExtra("topic", model.getTopic());
                 intent.putExtra("persona", "seller");
-                intent.putExtra("talker", model.getBuyerName());
+                intent.putExtra("talkerId", model.getBuyerId());
+                intent.putExtra("talkerName", model.getBuyerName());
                 v.getContext().startActivity(intent);
             }
         });
@@ -67,7 +71,7 @@ public class SellerChatAdapter extends FirestoreRecyclerAdapter<Chat, SellerChat
     class ChatHolder extends RecyclerView.ViewHolder {
         TextView tvTopic, tvStoreName, tvTimestamp;
         String chatId;
-        ImageView ivProfileImage;
+        ImageView ivProfileImage, ivNewMessage;
 
         public ChatHolder(@NonNull final View itemView) {
             super(itemView);
@@ -75,6 +79,7 @@ public class SellerChatAdapter extends FirestoreRecyclerAdapter<Chat, SellerChat
             tvStoreName = itemView.findViewById(R.id.tv_store_name);
             tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
             ivProfileImage = itemView.findViewById(R.id.iv_profile_photo2);
+            ivNewMessage = itemView.findViewById(R.id.iv_new_message);
         }
 
     }

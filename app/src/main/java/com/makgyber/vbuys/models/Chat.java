@@ -13,7 +13,8 @@ public class Chat {
     private String storeImage;
     private Timestamp dateCreated;
     private Timestamp lastMessageCreated;
-    private boolean seen;
+    private boolean sellerSeen;
+    private boolean buyerSeen;
 
     public Chat(){}
 
@@ -78,12 +79,20 @@ public class Chat {
         this.lastMessageCreated = lastMessageCreated;
     }
 
-    public boolean isSeen() {
-        return seen;
+    public boolean isSellerSeen() {
+        return sellerSeen;
     }
 
-    public void setSeen(boolean seen) {
-        this.seen = seen;
+    public void setSellerSeen(boolean sellerSeen) {
+        this.sellerSeen = sellerSeen;
+    }
+
+    public boolean isBuyerSeen() {
+        return buyerSeen;
+    }
+
+    public void setBuyerSeen(boolean buyerSeen) {
+        this.buyerSeen = buyerSeen;
     }
 }
 

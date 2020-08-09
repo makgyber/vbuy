@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
@@ -24,10 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ChatAdapter;
-import com.makgyber.vbuys.adapters.SellerChatAdapter;
-import com.makgyber.vbuys.adapters.TindahanAdapter;
 import com.makgyber.vbuys.models.Chat;
-import com.makgyber.vbuys.models.Tindahan;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -76,9 +72,6 @@ public class ChatFragment extends Fragment {
 
     private void getChatList(View vw) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-        SharedPreferences chatPref = getContext().getSharedPreferences("CHATS", MODE_PRIVATE);
-
-
         String userId = sharedPreferences.getString("userId", "");
         Log.d(TAG, "getChatList: UserId - " + userId);
         Query query = chatRef.whereEqualTo("buyerId", userId);
@@ -90,22 +83,12 @@ public class ChatFragment extends Fragment {
                     public Chat parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                         Chat chat = snapshot.toObject(Chat.class);
                         chat.setId( snapshot.getId() );
-                        String savedTimeCreated = chatPref.getString(snapshot.getId(), "");
-                        String lastMessageCreated = snapshot.get("lastMessageCreated").toString();
-                        boolean isSeen =  lastMessageCreated.equalsIgnoreCase(savedTimeCreated);
-                        chat.setSeen(isSeen);
-                        Log.d(TAG, "parseSnapshot: lastMessageCreated " + snapshot.get("lastMessageCreated") + " " + savedTimeCreated);
-                        SharedPreferences.Editor editor = chatPref.edit();
-                        editor.putString(snapshot.getId(), snapshot.get("lastMessageCreated").toString());
-                        editor.commit();
                         return chat;
                     }
                 })
                 .build();
 
-
         adapter = new ChatAdapter(options);
-
         RecyclerView recyclerView = vw.findViewById(R.id.rv_chat);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

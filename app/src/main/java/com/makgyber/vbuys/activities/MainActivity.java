@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -54,6 +55,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.adapters.ProductAdapter;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference productRef = db.collection("product");
     private CollectionReference userRef = db.collection("user");
+    private CollectionReference chatRef = db.collection("chat");
     private ProductAdapter adapter;
     private FirebaseUser user;
     private ImageView ivHealth, ivFood, ivServices, ivRealty;
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.action_messages:
                         loadFragment(new ChatFragment());
+                        navigationView.getOrCreateBadge(R.id.action_messages).setVisible(false);
                         return true;
                 }
                 return false;
@@ -117,9 +122,17 @@ public class MainActivity extends AppCompatActivity {
         });
         loadFragment(new BuyerMainFragment());
 
-        navigationView.getOrCreateBadge(R.id.action_messages).setVisible(true);
-    }
+        Query query = chatRef.whereEqualTo("buyerSeen", false);
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots.size() > 0) {
+                    navigationView.getOrCreateBadge(R.id.action_messages).setVisible(true);
+                }
+            }
+        });
 
+    }
 
 
     @Override

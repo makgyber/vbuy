@@ -21,7 +21,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.makgyber.vbuys.R;
-import com.makgyber.vbuys.adapters.ChatAdapter;
 import com.makgyber.vbuys.adapters.SellerChatAdapter;
 import com.makgyber.vbuys.models.Chat;
 
@@ -74,6 +73,7 @@ public class SellerChatFragment extends Fragment {
     private void getSellerChatList(View vw) {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
         String storeId = sharedPreferences.getString("tindahanId", "");
+
         Log.d(TAG, "getSellerChatList: StoreId - " + storeId);
         Query query = chatRef.whereEqualTo("storeId", storeId);
 

@@ -15,11 +15,14 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ProductAdapter;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
@@ -34,6 +37,7 @@ public class SellerMainActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference productRef = db.collection("product");
     private CollectionReference userRef = db.collection("user");
+    private CollectionReference chatRef = db.collection("chat");
     private ProductAdapter adapter;
     private FirebaseUser user;
 
@@ -72,6 +76,16 @@ public class SellerMainActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setTitle("Seller Dashboard");
+
+        Query query = chatRef.whereEqualTo("sellerSeen", false);
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots.size() > 0) {
+                    navigationView.getOrCreateBadge(R.id.action_messages).setVisible(true);
+                }
+            }
+        });
     }
 
     @Override

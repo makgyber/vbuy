@@ -29,7 +29,7 @@ import com.makgyber.vbuys.models.Message;
 
 public class MessageActivity extends AppCompatActivity {
 
-    String chatId, topic, persona, talker, profileImage;
+    String chatId, topic, persona, talker, profileImage, talkerId;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference messageRef = db.collection("message");
@@ -53,8 +53,12 @@ public class MessageActivity extends AppCompatActivity {
             topic = getIntent().getExtras().get("topic").toString();
         }
 
-        if (getIntent().hasExtra("talker")) {
-            talker = getIntent().getExtras().get("talker").toString();
+        if (getIntent().hasExtra("talkerId")) {
+            talkerId = getIntent().getExtras().get("talkerId").toString();
+        }
+
+        if (getIntent().hasExtra("talkerName")) {
+            talker = getIntent().getExtras().get("talkerName").toString();
         }
 
         if (getIntent().hasExtra("persona")) {
@@ -98,9 +102,11 @@ public class MessageActivity extends AppCompatActivity {
 
     private void prepareProfileImage() {
         if (persona.equalsIgnoreCase("buyer")) {
+            db.collection("chat").document(chatId).update("buyerSeen", true);
             SharedPreferences sharedUserPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
             profileImage = sharedUserPreferences.getString("photoUrl",  defaultProfileImage);
         } else {
+            db.collection("chat").document(chatId).update("sellerSeen", true);
             SharedPreferences sharedStorePreferences = getApplicationContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
             profileImage = sharedStorePreferences.getString("tindahanLogo",  defaultProfileImage);
         }
@@ -116,14 +122,25 @@ public class MessageActivity extends AppCompatActivity {
                     edtContent.setText("");
                     if(persona.equalsIgnoreCase("seller")) {
                         recyclerView.scrollToPosition(sellerAdapter.getItemCount() - 1);
+                        //update lastMessageCreated in chat document
+                        db.collection("chat").document(chatId).update(
+                                "lastMessageCreated", now,
+                                "buyerSeen", false,
+                                "sellerSeen", true
+                        );
                     } else {
                         recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                        //update lastMessageCreated in chat document
+                        db.collection("chat").document(chatId).update(
+                                "lastMessageCreated", now,
+                                "buyerSeen", true,
+                                "sellerSeen", false
+                        );
                     }
 
                 }
             });
-            //update lastMessageCreated in chat document
-            db.collection("chat").document(chatId).update("lastMessageCreated", now);
+
             //save the new time in sharedpreferences
             SharedPreferences chatPref = getSharedPreferences("CHAT", MODE_PRIVATE);
             SharedPreferences.Editor editor = chatPref.edit();
