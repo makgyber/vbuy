@@ -117,7 +117,10 @@ public class MainActivity extends AppCompatActivity {
         });
         loadFragment(new BuyerMainFragment());
 
+        navigationView.getOrCreateBadge(R.id.action_messages).setVisible(true);
     }
+
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

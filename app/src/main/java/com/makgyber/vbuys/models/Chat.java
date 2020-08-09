@@ -12,6 +12,8 @@ public class Chat {
     private String storeName;
     private String storeImage;
     private Timestamp dateCreated;
+    private Timestamp lastMessageCreated;
+    private boolean seen;
 
     public Chat(){}
 
@@ -24,6 +26,7 @@ public class Chat {
         this.storeName = sellerName;
         this.storeImage = sellerImage;
         this.dateCreated = dateCreated;
+        this.lastMessageCreated = dateCreated;
     }
 
 
@@ -65,6 +68,22 @@ public class Chat {
 
     public Timestamp getDateCreated() {
         return dateCreated;
+    }
+
+    public Timestamp getLastMessageCreated() {
+        return lastMessageCreated;
+    }
+
+    public void setLastMessageCreated(Timestamp lastMessageCreated) {
+        this.lastMessageCreated = lastMessageCreated;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }
 

@@ -86,6 +86,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     private void getInventoryList() {
         Query query = productRef.whereEqualTo("tindahanId", storeId);
+
         Log.d("InventoryActivity", "getInventoryList: STORE: " + storeId);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
                 .setQuery(query, new SnapshotParser<Product>() {

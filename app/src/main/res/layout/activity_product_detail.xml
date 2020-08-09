@@ -10,15 +10,16 @@
     <ImageView
         android:id="@+id/product_detail_image"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
-
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/product_detail_image"
-        android:nestedScrollingEnabled="true">
+        android:nestedScrollingEnabled="true"
+        android:isScrollContainer="true"
+        android:verticalScrollbarPosition="right">
 
         <Button
             android:id="@+id/btn_message_seller"

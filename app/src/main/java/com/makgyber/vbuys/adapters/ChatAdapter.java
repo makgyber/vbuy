@@ -1,6 +1,7 @@
 package com.makgyber.vbuys.adapters;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.TimeZone;
 import android.util.Log;
@@ -9,14 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.Timestamp;
 import com.makgyber.vbuys.R;
+import com.makgyber.vbuys.activities.MainActivity;
 import com.makgyber.vbuys.activities.MessageActivity;
 import com.makgyber.vbuys.models.Chat;
 import com.squareup.picasso.Picasso;
@@ -34,10 +34,14 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
         holder.tvTopic.setText(model.getTopic());
 
         Log.d("ChatAdapter", "onBindViewHolder: BUYER");
-
+        Log.d("ChatAdapter", "onBindViewHolder: seen? " + model.isSeen());
         holder.tvStoreName.setText(model.getStoreName());
         if (model.getStoreImage() != null && !model.getStoreImage().toString().isEmpty()) {
             Picasso.get().load(model.getStoreImage().toString()).centerCrop().resize(200, 200).into(holder.ivProfileImage);
+        }
+
+        if (model.isSeen()) {
+            holder.ivNewMessage.setVisibility(View.INVISIBLE);
         }
 
         holder.tvTimestamp.setText(formatDate(model.getDateCreated()));
@@ -68,7 +72,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
     class ChatHolder extends RecyclerView.ViewHolder {
         TextView tvTopic, tvStoreName, tvTimestamp;
         String chatId;
-        ImageView ivProfileImage;
+        ImageView ivProfileImage, ivNewMessage;
 
         public ChatHolder(@NonNull final View itemView) {
             super(itemView);
@@ -76,8 +80,10 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
             tvStoreName = itemView.findViewById(R.id.tv_store_name);
             tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
             ivProfileImage = itemView.findViewById(R.id.iv_profile_photo2);
-        }
+            ivNewMessage = itemView.findViewById(R.id.iv_new_message);
 
+        }
+        
     }
 
     private String formatDate(Timestamp dateCreated)  {
@@ -88,6 +94,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Chat, ChatAdapter.Chat
         dateCreated.toDate().toString();
         return sdf.format( dateCreated.toDate());
     }
+
 
 }
 

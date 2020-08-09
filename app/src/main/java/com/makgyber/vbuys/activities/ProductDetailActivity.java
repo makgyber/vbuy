@@ -108,7 +108,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductName.setText(productName);
         tvDescription.setText(productDescription);
         tvPrice.setText("Php " + productPrice);
-        Picasso.get().load(productImageUri).centerCrop().resize(400, 400).into(ivProduct);
+        Picasso.get().load(productImageUri).centerCrop().resize(480, 480).into(ivProduct);
 
         bMessageSeller = findViewById(R.id.btn_message_seller);
         bMessageSeller.setOnClickListener(new View.OnClickListener() {

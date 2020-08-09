@@ -108,7 +108,8 @@ public class MessageActivity extends AppCompatActivity {
 
     private void createMessage(View v) {
         if (!edtContent.getText().toString().isEmpty()) {
-            Message newMesg = new Message(chatId, Timestamp.now(), persona, edtContent.getText().toString(), profileImage);
+            Timestamp now = Timestamp.now();
+            Message newMesg = new Message(chatId, now, persona, edtContent.getText().toString(), profileImage);
             messageRef.document().set(newMesg).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -121,6 +122,13 @@ public class MessageActivity extends AppCompatActivity {
 
                 }
             });
+            //update lastMessageCreated in chat document
+            db.collection("chat").document(chatId).update("lastMessageCreated", now);
+            //save the new time in sharedpreferences
+            SharedPreferences chatPref = getSharedPreferences("CHAT", MODE_PRIVATE);
+            SharedPreferences.Editor editor = chatPref.edit();
+            editor.putString(chatId, now.toString());
+            editor.commit();
         }
 
     }
