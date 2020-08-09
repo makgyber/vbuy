@@ -2,6 +2,8 @@ package com.makgyber.vbuys.adapters;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.activities.InventoryActivity;
 import com.makgyber.vbuys.activities.InventoryDetailActivity;
@@ -85,6 +94,20 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
 
             }
         });
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference chatRef = db.collection("chat");
+        Query query = chatRef.whereEqualTo("storeId", model.getId()).whereEqualTo("sellerSeen", false);
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (queryDocumentSnapshots.size() > 0) {
+                    Drawable newIcon = holder.textViewMessages.getContext().getResources().getDrawable(R.drawable.messages_unread, null);
+                    holder.textViewMessages.setCompoundDrawablesRelativeWithIntrinsicBounds(null, newIcon,null,null);
+                }
+            }
+        });
+
     }
 
     @NonNull

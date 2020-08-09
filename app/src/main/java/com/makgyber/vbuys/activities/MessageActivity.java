@@ -114,12 +114,15 @@ public class MessageActivity extends AppCompatActivity {
 
     private void createMessage(View v) {
         if (!edtContent.getText().toString().isEmpty()) {
+            String content = edtContent.getText().toString();
+            edtContent.setText("");
             Timestamp now = Timestamp.now();
-            Message newMesg = new Message(chatId, now, persona, edtContent.getText().toString(), profileImage);
+            Message newMesg = new Message(chatId, now, persona, content, profileImage);
+
             messageRef.document().set(newMesg).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    edtContent.setText("");
+
                     if(persona.equalsIgnoreCase("seller")) {
                         recyclerView.scrollToPosition(sellerAdapter.getItemCount() - 1);
                         //update lastMessageCreated in chat document

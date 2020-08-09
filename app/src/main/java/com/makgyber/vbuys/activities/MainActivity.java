@@ -121,8 +121,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         loadFragment(new BuyerMainFragment());
-
-        Query query = chatRef.whereEqualTo("buyerSeen", false);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+        String buyerId = sharedPreferences.getString("userId", "");
+        Query query = chatRef.whereEqualTo("buyerId", buyerId).whereEqualTo("buyerSeen", false);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -295,8 +296,6 @@ public class MainActivity extends AppCompatActivity {
                                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("deliveryLocationLat", mDefaultLocation.toString());
-//                                mMap.addMarker(new MarkerOptions().position(mDefaultLocation).title("Deliver here!"));
-//                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
