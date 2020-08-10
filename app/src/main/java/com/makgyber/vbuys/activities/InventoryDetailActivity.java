@@ -251,15 +251,8 @@ public class InventoryDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-
         if (id == R.id.inventory_save) {
             saveProduct();
-            return true;
-        }
-
-        if (id == R.id.inventory_camera) {
-            Toast.makeText(InventoryDetailActivity.this, "Camera Not yet implemented", Toast.LENGTH_SHORT).show();
-
             return true;
         }
 
@@ -267,7 +260,6 @@ public class InventoryDetailActivity extends AppCompatActivity {
             openGallery();
             return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }

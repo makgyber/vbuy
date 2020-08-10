@@ -61,6 +61,8 @@ import com.makgyber.vbuys.adapters.ProductAdapter;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
 import com.makgyber.vbuys.fragments.ChatFragment;
+import com.makgyber.vbuys.fragments.FeedbackFragment;
+import com.makgyber.vbuys.fragments.OrderFragment;
 import com.makgyber.vbuys.fragments.ProfileFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -111,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
                         loadFragment(new BuyerMainFragment());
                         return true;
                     case R.id.action_feedback:
+                        loadFragment(new FeedbackFragment());
+                        return true;
+                    case R.id.action_order:
+                        loadFragment(new OrderFragment());
                         return true;
                     case R.id.action_messages:
                         loadFragment(new ChatFragment());
@@ -199,7 +205,13 @@ public class MainActivity extends AppCompatActivity {
 
    private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_container, fragment);
+        transaction.setCustomAnimations(
+               R.anim.slide_in,  // enter
+               R.anim.fade_out,  // exit
+               R.anim.fade_in,   // popEnter
+               R.anim.slide_out  // popExit
+        );
+       transaction.replace(R.id.main_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
