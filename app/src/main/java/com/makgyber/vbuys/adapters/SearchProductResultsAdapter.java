@@ -33,9 +33,9 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
         holder.textViewProductPrice.setText(Double.toString(model.getPrice()));
         holder.textViewTindahan.setText(model.getTindahanName());
         holder.productId = model.getId();
-        if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
-            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(300,300).into(holder.productImage);
-            Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
+
+        if (model.getImageList() != null && !model.getImageList().isEmpty()) {
+            Picasso.get().load(model.getImageList().get(0).toString()).centerCrop().resize(300,300).into(holder.productImage);
         }
 
 
@@ -56,7 +56,7 @@ public class SearchProductResultsAdapter extends FirestoreRecyclerAdapter<Produc
                 intent.putExtra("PRODUCT_PRICE", productPrice);
                 intent.putExtra("PRODUCT_TINDAHAN_ID", model.getTindahanId());
                 intent.putExtra("PRODUCT_TINDAHAN_NAME", model.getTindahanName());
-
+                intent.putStringArrayListExtra("PRODUCT_IMAGE_LIST", model.getImageList());
                 v.getContext().startActivity(intent);
             }
         });

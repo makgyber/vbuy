@@ -18,6 +18,10 @@ import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductHolder> {
 
     public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options) {
@@ -33,11 +37,14 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
         holder.textViewProductPrice.setText(Double.toString(model.getPrice()));
         holder.textViewTindahan.setText(model.getTindahanName());
         holder.productId = model.getId();
-        if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
-            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(200,200).into(holder.productImage);
+//        if (model.getImageUri() != null && !model.getImageUri().toString().isEmpty()) {
+//            Picasso.get().load(model.getImageUri().toString()).centerCrop().resize(200,200).into(holder.productImage);
+//            Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
+//        }
+        if (model.getImageList() != null && !model.getImageUri().isEmpty()) {
+            Picasso.get().load(model.getImageList().get(0).toString()).centerCrop().resize(200,200).into(holder.productImage);
             Log.d("PRODUCT ADAPTER", "onBindViewHolder: " + model.getImageUri().toString());
         }
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,12 +53,15 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
                 Log.d("ProductAdapter", "onClick: product_id " + product_id);
                 Log.d("ProductAdapter", "onClick: TINDAHAN_ID " + model.getTindahanId());
                 Log.d("ProductAdapter", "onClick: TINDAHAN_NAME " + model.getProductName());
+
                 Intent intent = new Intent(v.getContext(), InventoryDetailActivity.class );
                 intent.putExtra("PRODUCT_ID", product_id);
                 intent.putExtra("TINDAHAN_ID", model.getTindahanId());
                 intent.putExtra("TINDAHAN_NAME", model.getTindahanName());
                 intent.putExtra("TINDAHAN_LATITUDE", Double.toString(model.getPosition().getLatitude()));
                 intent.putExtra("TINDAHAN_LONGITUDE",  Double.toString(model.getPosition().getLongitude()));
+
+                intent.putStringArrayListExtra("PRODUCT_IMAGE_LIST", model.getImageList());
                 v.getContext().startActivity(intent);
             }
         });

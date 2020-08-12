@@ -226,6 +226,11 @@ public class StoreSetupActivity extends AppCompatActivity {
         String deliveryOptions = mDeliveryOptions.getText().toString();
         String owner = userId;
 
+        if ( tindahanName.isEmpty() ) {
+            
+            return;
+        }
+
         Boolean publish = sPublish.isChecked();
 
         final Tindahan tindahan = new Tindahan(tindahanName, owner, contactInfo, address,

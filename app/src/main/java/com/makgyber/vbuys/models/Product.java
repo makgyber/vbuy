@@ -2,6 +2,7 @@ package com.makgyber.vbuys.models;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -24,6 +25,7 @@ public class Product {
     private String imageUri;
     private String category;
     private GeoPoint position;
+    private ArrayList<String> imageList;
 
     public Product() {
         //need empty constructor
@@ -101,5 +103,13 @@ public class Product {
 
     public void setPosition(GeoPoint position) {
         this.position = position;
+    }
+
+    public ArrayList<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(ArrayList<String> imageList) {
+        this.imageList = imageList;
     }
 }
