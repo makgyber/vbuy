@@ -3,9 +3,14 @@ package com.makgyber.vbuys.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -15,10 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,7 +36,6 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,17 +44,18 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.makgyber.vbuys.adapters.ImageRecyclerViewAdapter;
 import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class InventoryDetailActivity extends AppCompatActivity {
     private final static String TINDAHAN = "tindahan";
@@ -73,6 +81,11 @@ public class InventoryDetailActivity extends AppCompatActivity {
     Chip foodChip, deliveryChip, devicesChip, servicesChip;
     Switch featureSwitch;
     String selectedCategory="";
+    ViewPager vpImages;
+    ArrayList<String> productImageList;
+    ImageRecyclerViewAdapter irvaImageAdapter;
+    RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +118,7 @@ public class InventoryDetailActivity extends AppCompatActivity {
         description = (TextInputEditText) findViewById(R.id.description);
         price = (TextInputEditText) findViewById(R.id.price);
         tags = (TextInputEditText) findViewById(R.id.tags);
-        productImage = (ImageView) findViewById(R.id.product_image);
+//        productImage = (ImageView) findViewById(R.id.product_image);
         categoryGroup = findViewById(R.id.cg_category);
         foodChip = findViewById(R.id.c_food);
         servicesChip = findViewById(R.id.c_services);
@@ -115,12 +128,12 @@ public class InventoryDetailActivity extends AppCompatActivity {
 
         spinner = (ProgressBar) findViewById(R.id.progressBar1);
         spinner.setVisibility(View.GONE);
-        productImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+//        productImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openGallery();
+//            }
+//        });
 
         categoryGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
@@ -149,7 +162,27 @@ public class InventoryDetailActivity extends AppCompatActivity {
             imageUpdated = true;
             Log.d(TAG, "onActivityResult: " + data.getDataString());
             Uri selectedImage = data.getData();
-            productImage.setImageURI(selectedImage);
+
+            StorageReference productRef = storageRef.child("images/tindahan/"+ tindahanId + "/" + productId + "/" + UUID.randomUUID().toString() + ".jpg");
+            UploadTask uploadTask = productRef.putFile(selectedImage);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    Toast.makeText(InventoryDetailActivity.this, "File Upload failed", Toast.LENGTH_SHORT).show();
+                    spinner.setVisibility(View.GONE);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                    while (!urlTask.isSuccessful());
+                    Uri downloadUrl = urlTask.getResult();
+                    productImageList.add(downloadUrl.toString());
+                    productDbRef.document(productId).update("imageList", productImageList);
+                    irvaImageAdapter.notifyDataSetChanged();
+                }
+            });
 
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -177,14 +210,42 @@ public class InventoryDetailActivity extends AppCompatActivity {
                         price.setText(document.get("price").toString());
                         String tagsStr = document.get("tags").toString();
                         tags.setText(tagsStr.replace("[", "").replace("]",""));
-                        if (document.get("imageUri") != null && !document.get("imageUri").toString().isEmpty()) {
-                            Picasso.get().load(document.get("imageUri").toString()).centerCrop().resize(400,400).into(productImage);
-                        }
+                        productImageList= (ArrayList<String>)document.get("imageList");
 
+                        irvaImageAdapter = new ImageRecyclerViewAdapter(productImageList);
+
+                        recyclerView = findViewById(R.id.rv_inventory_images);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(InventoryDetailActivity.this));
+                        recyclerView.setAdapter(irvaImageAdapter);
+
+
+                        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
+
+                            @Override
+                            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                                Toast.makeText(InventoryDetailActivity.this, "on Move", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+
+                            @Override
+                            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                                Toast.makeText(InventoryDetailActivity.this, "Image deleted", Toast.LENGTH_SHORT).show();
+                                final int position = viewHolder.getAdapterPosition();
+                                productImageList.remove(position);
+                                productDbRef.document(productId).update("imageList", productImageList);
+                                irvaImageAdapter.notifyItemRemoved(position);
+                            }
+                        };
+
+                        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+                        itemTouchHelper.attachToRecyclerView(recyclerView);
                     }
                 }
             }
         });
+
+
     }
 
     @Override
@@ -340,8 +401,8 @@ public class InventoryDetailActivity extends AppCompatActivity {
                             spinner.setVisibility(View.GONE);
                         }
                     });
-            if (imageUpdated)
-                uploadProductImage();
+//            if (imageUpdated)
+//                uploadProductImage();
         }
 
     }
@@ -349,10 +410,6 @@ public class InventoryDetailActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        getTindahanDetailsFromSharedPreferences();
     }
 
-    private void getTindahanDetailsFromSharedPreferences() {
-
-    }
 }
