@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_home:
                         loadFragment(new BuyerMainFragment());
                         return true;
-                    case R.id.action_feedback:
-                        loadFragment(new FeedbackFragment());
-                        return true;
+//                    case R.id.action_feedback:
+//                        loadFragment(new FeedbackFragment());
+//                        return true;
                     case R.id.action_order:
                         loadFragment(new OrderFragment());
                         return true;

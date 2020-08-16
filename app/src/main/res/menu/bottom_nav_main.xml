@@ -23,12 +23,12 @@
 <!--        android:icon="@drawable/ic_store_white_24dp"-->
 <!--        />-->
 
-    <item
-        android:id="@+id/action_feedback"
-        android:orderInCategory="3"
-        android:title="@string/feedback"
-        android:icon="@drawable/ic_feedback_white_24dp"
-        />
+<!--    <item-->
+<!--        android:id="@+id/action_feedback"-->
+<!--        android:orderInCategory="3"-->
+<!--        android:title="@string/feedback"-->
+<!--        android:icon="@drawable/ic_feedback_white_24dp"-->
+<!--        />-->
 
     <item
         android:id="@+id/action_order"
