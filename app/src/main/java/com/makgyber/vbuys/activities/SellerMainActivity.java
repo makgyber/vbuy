@@ -51,38 +51,38 @@ public class SellerMainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        BottomNavigationView navigationView = findViewById(R.id.bnv_seller_main);
-        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.seller_dashboard:
-                        loadFragment(new SellerDashboardFragment());
-                        return true;
-                    case R.id.seller_settings:
-                        loadFragment(new TindahanListFragment());
-                        return true;
-                    case R.id.seller_feedback:
-                        loadFragment(new FeedbackFragment());
-                        return true;
-                }
-                return false;
-            }
-        });
+//        BottomNavigationView navigationView = findViewById(R.id.bnv_seller_main);
+//        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch(item.getItemId()) {
+//                    case R.id.seller_dashboard:
+//                        loadFragment(new SellerDashboardFragment());
+//                        return true;
+//                    case R.id.seller_settings:
+//                        loadFragment(new TindahanListFragment());
+//                        return true;
+//                    case R.id.seller_feedback:
+//                        loadFragment(new FeedbackFragment());
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
 
-        getSupportActionBar().setTitle("Seller Dashboard");
+        getSupportActionBar().setTitle("My Stores");
 
-        Query query = chatRef.whereEqualTo("sellerSeen", false);
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (queryDocumentSnapshots.size() > 0) {
-                    navigationView.getOrCreateBadge(R.id.action_messages).setVisible(true);
-                }
-            }
-        });
+//        Query query = chatRef.whereEqualTo("sellerSeen", false);
+//        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                if (queryDocumentSnapshots.size() > 0) {
+//                    navigationView.getOrCreateBadge(R.id.action_messages).setVisible(true);
+//                }
+//            }
+//        });
 
-        loadFragment(new SellerDashboardFragment());
+        loadFragment(new TindahanListFragment());
     }
 
     @Override
@@ -104,6 +104,11 @@ public class SellerMainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        if (id == R.id.action_add_store) {
+            startActivity(new Intent(SellerMainActivity.this, StoreSetupActivity.class));
+            return true;
+        }
 
         if (id == R.id.action_home) {
             startActivity(new Intent(SellerMainActivity.this, MainActivity.class));

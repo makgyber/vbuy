@@ -11,34 +11,13 @@
         android:layout_height="match_parent">
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="My Store List"
-        android:id="@+id/tv_store_list"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        />
-
     <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_tindahan"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_below="@+id/tv_store_list"
         />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/efab_add_tindahan"
-        app:icon="@drawable/ic_library_add_white_24dp"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        />
 
     </RelativeLayout>
 </FrameLayout>

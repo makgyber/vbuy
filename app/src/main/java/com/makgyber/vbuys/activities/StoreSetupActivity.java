@@ -197,19 +197,19 @@ public class StoreSetupActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.action_inventory) {
-
-            if (storeExists) {
-                startActivity(new Intent(StoreSetupActivity.this, InventoryActivity.class));
-            } else {
-                AlertDialog.Builder builder= new AlertDialog.Builder(StoreSetupActivity.this);
-                builder.setMessage("Please save your store profile first");
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-
-            return true;
-        }
+//        if (id == R.id.action_inventory) {
+//
+//            if (storeExists) {
+//                startActivity(new Intent(StoreSetupActivity.this, InventoryActivity.class));
+//            } else {
+//                AlertDialog.Builder builder= new AlertDialog.Builder(StoreSetupActivity.this);
+//                builder.setMessage("Please save your store profile first");
+//                AlertDialog alert = builder.create();
+//                alert.show();
+//            }
+//
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

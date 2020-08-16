@@ -44,7 +44,8 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
+
+
 
         if (getIntent().hasExtra("chatId")) {
             chatId = getIntent().getExtras().get("chatId").toString();
@@ -66,9 +67,16 @@ public class MessageActivity extends AppCompatActivity {
             persona = getIntent().getExtras().get("persona").toString();
         }
 
+        if (persona.equals("seller")) {
+            setTheme(R.style.SellerTheme);
+        }
+
+        setContentView(R.layout.activity_message);
+
         getSupportActionBar().setTitle(topic);
         getSupportActionBar().setSubtitle(talker);
         getSupportActionBar().setHomeButtonEnabled(true);
+
 
         edtContent = findViewById(R.id.edt_content);
 

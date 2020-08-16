@@ -45,7 +45,6 @@ public class TindahanListFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference tindahanRef = db.collection("tindahan");
     private TindahanAdapter adapter;
-    ExtendedFloatingActionButton addTindahan;
 
     public TindahanListFragment() {
         // Required empty public constructor
@@ -73,14 +72,6 @@ public class TindahanListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addTindahan = view.findViewById(R.id.efab_add_tindahan);
-        addTindahan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), StoreSetupActivity.class));
-
-            }
-        });
         getInventoryList(view);
     }
 

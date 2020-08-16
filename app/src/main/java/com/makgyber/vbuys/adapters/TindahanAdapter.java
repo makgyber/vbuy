@@ -28,6 +28,7 @@ import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.activities.InventoryActivity;
 import com.makgyber.vbuys.activities.InventoryDetailActivity;
 import com.makgyber.vbuys.activities.MessageActivity;
+import com.makgyber.vbuys.activities.SellerChatActivity;
 import com.makgyber.vbuys.activities.StoreSetupActivity;
 import com.makgyber.vbuys.fragments.ChatFragment;
 import com.makgyber.vbuys.fragments.SellerChatFragment;
@@ -36,6 +37,8 @@ import com.makgyber.vbuys.models.Tindahan;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -51,6 +54,10 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
 
         holder.textViewTindahanName.setText(model.getTindahanName());
         holder.tindahanId = model.getId();
+
+        if (null!=model.getImageUri()) {
+            Picasso.get().load(model.getImageUri()).centerCrop().resize(400,400).into(holder.circleImageView);
+        }
 
         holder.textViewInventory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,8 +96,11 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
                 editor.putString("tindahanLng", Double.toString(model.getPosition().getLongitude()));;
                 editor.commit();
 
-                ((FragmentActivity)v.getContext()).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, new SellerChatFragment()).addToBackStack(null).commit();
+                Intent intent = new Intent(v.getContext(), SellerChatActivity.class );
+                v.getContext().startActivity(intent);
+
+//                ((FragmentActivity)v.getContext()).getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.main_container, new SellerChatFragment()).addToBackStack(null).commit();
 
             }
         });
@@ -122,6 +132,7 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
         TextView textViewSettings;
         TextView textViewInventory;
         TextView textViewMessages;
+        CircleImageView circleImageView;
 
         String tindahanId;
 
@@ -131,6 +142,7 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
             textViewSettings = itemView.findViewById(R.id.tv_settings);
             textViewInventory = itemView.findViewById(R.id.tv_inventory);
             textViewMessages = itemView.findViewById(R.id.tv_messages);
+            circleImageView = itemView.findViewById(R.id.iv_store_profile_logo);
         }
     }
 
