@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.makgyber.vbuys.R;
+import com.makgyber.vbuys.fragments.InvoiceListFragment;
 
 public class InvoiceActivity extends AppCompatActivity {
 
@@ -14,9 +15,11 @@ public class InvoiceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice);
+        getSupportActionBar().setTitle("Invoices");
+        getSupportActionBar().setHomeButtonEnabled(true);
 
+        loadFragment(InvoiceListFragment.newInstance("seller"));
 
-        loadFragment(new );
     }
 
     private void loadFragment(Fragment fragment) {

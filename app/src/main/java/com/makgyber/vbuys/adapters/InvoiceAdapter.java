@@ -20,19 +20,16 @@ import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.activities.MessageActivity;
 import com.makgyber.vbuys.models.Chat;
 import com.makgyber.vbuys.models.Invoice;
-import com.squareup.picasso.Picasso;
 
 public class InvoiceAdapter extends FirestoreRecyclerAdapter<Invoice, InvoiceAdapter.InvoiceHolder> {
 
-    public InvoiceAdapter(@NonNull FirestoreRecyclerOptions<Invoice> options) {
-        super(options);
-    }
+    public InvoiceAdapter(@NonNull FirestoreRecyclerOptions<Invoice> options) { super(options); }
 
     @Override
     protected void onBindViewHolder(@NonNull InvoiceAdapter.InvoiceHolder holder, final int position, @NonNull final Invoice model) {
-//        Log.d("TAG", "onBindViewHolder: " + model.getId());
-//
-//        holder.tvTopic.setText(model.getTopic());
+        Log.d("TAG", "onBindViewHolder: " + model.getId());
+        holder.tvTopic.setText(model.getBuyerName());
+
 //
 //        holder.tvStoreName.setText(model.getStoreName());
 //        if (model.getStoreImage() != null && !model.getStoreImage().toString().isEmpty()) {
@@ -72,28 +69,23 @@ public class InvoiceAdapter extends FirestoreRecyclerAdapter<Invoice, InvoiceAda
     class InvoiceHolder extends RecyclerView.ViewHolder {
         TextView tvTopic, tvStoreName, tvTimestamp;
         String chatId;
-        ImageView ivProfileImage, ivNewMessage;
 
         public InvoiceHolder(@NonNull final View itemView) {
             super(itemView);
             tvTopic = itemView.findViewById(R.id.tv_topic);
             tvStoreName = itemView.findViewById(R.id.tv_store_name);
             tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
-            ivProfileImage = itemView.findViewById(R.id.iv_profile_photo2);
-            ivNewMessage = itemView.findViewById(R.id.iv_new_message);
-
         }
 
     }
 
-    private String formatDate(Timestamp dateCreated)  {
+    private String formatDate(Timestamp dateCreated) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy' 'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("HKT"));
         TimeZone tz = TimeZone.getDefault();
         sdf.setTimeZone(tz);
         dateCreated.toDate().toString();
-        return sdf.format( dateCreated.toDate());
+        return sdf.format(dateCreated.toDate());
     }
-
 
 }

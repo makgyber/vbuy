@@ -37,25 +37,6 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         Picasso.get().load(mValues.get(position)).centerCrop().resize(400,400).into(holder.mImageView);
-
-//        holder.mImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//
-//
-//                AlertDialog.Builder builder = new AlertDialog.Builder(holder.mView.getContext());
-//                builder.setMessage("Delete this image?");
-//                builder.setCancelable(true);
-//
-//                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                });
-//            }
-//        });
     }
 
     @Override

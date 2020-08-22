@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,8 +19,11 @@ import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.SellerChatAdapter;
 import com.makgyber.vbuys.models.Chat;
@@ -37,6 +41,7 @@ public class SellerChatFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference chatRef = db.collection("chat");
     private SellerChatAdapter adapter;
+    private TextView tvEmpty;
 
     public SellerChatFragment() {
         // Required empty public constructor
@@ -75,7 +80,16 @@ public class SellerChatFragment extends Fragment {
         String storeId = sharedPreferences.getString("tindahanId", "");
 
         Log.d(TAG, "getSellerChatList: StoreId - " + storeId);
+        RecyclerView recyclerView = vw.findViewById(R.id.rv_chat);
+        tvEmpty = vw.findViewById(R.id.tv_empty);
         Query query = chatRef.whereEqualTo("storeId", storeId);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                tvEmpty.setVisibility(queryDocumentSnapshots.getDocuments().isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        });
+
 
         FirestoreRecyclerOptions<Chat> options = new FirestoreRecyclerOptions.Builder<Chat>()
                 .setQuery(query, new SnapshotParser<Chat>() {
@@ -91,7 +105,7 @@ public class SellerChatFragment extends Fragment {
 
         adapter = new SellerChatAdapter(options);
 
-        RecyclerView recyclerView = vw.findViewById(R.id.rv_chat);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

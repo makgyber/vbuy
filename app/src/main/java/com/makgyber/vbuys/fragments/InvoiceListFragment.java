@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,8 +19,11 @@ import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.InvoiceAdapter;
 import com.makgyber.vbuys.adapters.InvoiceAdapter;
@@ -31,10 +35,12 @@ public class InvoiceListFragment extends Fragment {
     private final String TAG="InvoiceFragment";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference InvoiceRef = db.collection("invoice");
+    private CollectionReference invoiceRef = db.collection("invoice");
     private InvoiceAdapter adapter;
+    private String context;
+    private TextView tvEmpty;
 
-    public InvoiceListFragment() {
+    public InvoiceListFragment(String context) {
         // Required empty public constructor
     }
 
@@ -42,14 +48,19 @@ public class InvoiceListFragment extends Fragment {
      * @return A new instance of fragment InvoiceFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static InvoiceListFragment newInstance() {
-        InvoiceListFragment fragment = new InvoiceListFragment();
+    public static InvoiceListFragment newInstance(String context) {
+        InvoiceListFragment fragment = new InvoiceListFragment(context);
+        Bundle args = new Bundle();
+        args.putString("context", context);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        context = args.getString("context");
     }
 
     @Override
@@ -69,26 +80,34 @@ public class InvoiceListFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
         Log.d(TAG, "getInvoiceList: UserId - " + userId);
-        Query query = InvoiceRef.whereEqualTo("buyerId", userId);
+        Query query = invoiceRef.whereEqualTo("buyerId", userId);
+        RecyclerView recyclerView = vw.findViewById(R.id.rv_invoice);
+        tvEmpty = vw.findViewById(R.id.tv_empty);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                tvEmpty.setVisibility(queryDocumentSnapshots.getDocuments().isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        });
 
         FirestoreRecyclerOptions<Invoice> options = new FirestoreRecyclerOptions.Builder<Invoice>()
                 .setQuery(query, new SnapshotParser<Invoice>() {
                     @NonNull
                     @Override
                     public Invoice parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                        Invoice Invoice = snapshot.toObject(Invoice.class);
-                        Invoice.setId( snapshot.getId() );
-                        return Invoice;
+                        Invoice invoice = snapshot.toObject(Invoice.class);
+                        invoice.setId( snapshot.getId() );
+                        Log.d(TAG, "parseSnapshot: ID  "  + snapshot.getId());
+                        return invoice;
                     }
                 })
                 .build();
 
         adapter = new InvoiceAdapter(options);
-        RecyclerView recyclerView = vw.findViewById(R.id.rv_invoice);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-
     }
 
 

@@ -13,14 +13,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ChatAdapter;
 import com.makgyber.vbuys.models.Chat;
@@ -38,6 +42,7 @@ public class ChatFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference chatRef = db.collection("chat");
     private ChatAdapter adapter;
+    private TextView tvEmpty;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -74,7 +79,15 @@ public class ChatFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
         Log.d(TAG, "getChatList: UserId - " + userId);
+        RecyclerView recyclerView = vw.findViewById(R.id.rv_chat);
+        tvEmpty = vw.findViewById(R.id.tv_empty);
         Query query = chatRef.whereEqualTo("buyerId", userId);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                tvEmpty.setVisibility(queryDocumentSnapshots.getDocuments().isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        });
 
         FirestoreRecyclerOptions<Chat> options = new FirestoreRecyclerOptions.Builder<Chat>()
                 .setQuery(query, new SnapshotParser<Chat>() {
@@ -89,7 +102,7 @@ public class ChatFragment extends Fragment {
                 .build();
 
         adapter = new ChatAdapter(options);
-        RecyclerView recyclerView = vw.findViewById(R.id.rv_chat);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

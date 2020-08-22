@@ -1,6 +1,7 @@
 package com.makgyber.vbuys.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,14 +12,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.models.Product;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.adapters.ProductAdapter;
@@ -30,6 +36,7 @@ public class InventoryActivity extends AppCompatActivity {
     private CollectionReference productRef = db.collection("product");
     private ProductAdapter adapter;
     private String storeId = "", tindahanName, tindahanLatitude, tindahanLongitude;
+    private TextView tvEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +92,15 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void getInventoryList() {
+        RecyclerView recyclerView = findViewById(R.id.rv_products);
         Query query = productRef.whereEqualTo("tindahanId", storeId);
+        tvEmpty = findViewById(R.id.tv_empty);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                tvEmpty.setVisibility(queryDocumentSnapshots.getDocuments().isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        });
 
         Log.d("InventoryActivity", "getInventoryList: STORE: " + storeId);
         FirestoreRecyclerOptions<Product> options = new FirestoreRecyclerOptions.Builder<Product>()
@@ -102,7 +117,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         adapter = new ProductAdapter(options);
 
-        RecyclerView recyclerView = findViewById(R.id.rv_products);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(InventoryActivity.this));
         recyclerView.setAdapter(adapter);

@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.activities.InventoryActivity;
 import com.makgyber.vbuys.activities.InventoryDetailActivity;
+import com.makgyber.vbuys.activities.InvoiceActivity;
 import com.makgyber.vbuys.activities.MessageActivity;
 import com.makgyber.vbuys.activities.SellerChatActivity;
 import com.makgyber.vbuys.activities.StoreSetupActivity;
@@ -105,6 +106,28 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
             }
         });
 
+        holder.textViewInvoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences = v.getContext().getSharedPreferences("TINDAHAN", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("tindahanId", model.getId());
+                editor.putString("tindahanName", model.getTindahanName());
+                editor.putString("contactInfo", model.getContactInfo());
+                editor.putString("tindahanAddress", model.getAddress());
+                editor.putString("tindahanLat", Double.toString(model.getPosition().getLatitude()) );
+                editor.putString("tindahanLng", Double.toString(model.getPosition().getLongitude()));;
+                editor.commit();
+
+                Intent intent = new Intent(v.getContext(), InvoiceActivity.class );
+                v.getContext().startActivity(intent);
+
+//                ((FragmentActivity)v.getContext()).getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.main_container, new SellerChatFragment()).addToBackStack(null).commit();
+
+            }
+        });
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference chatRef = db.collection("chat");
         Query query = chatRef.whereEqualTo("storeId", model.getId()).whereEqualTo("sellerSeen", false);
@@ -132,6 +155,7 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
         TextView textViewSettings;
         TextView textViewInventory;
         TextView textViewMessages;
+        TextView textViewInvoice;
         CircleImageView circleImageView;
 
         String tindahanId;
@@ -142,6 +166,7 @@ public class TindahanAdapter  extends FirestoreRecyclerAdapter<Tindahan, Tindaha
             textViewSettings = itemView.findViewById(R.id.tv_settings);
             textViewInventory = itemView.findViewById(R.id.tv_inventory);
             textViewMessages = itemView.findViewById(R.id.tv_messages);
+            textViewInvoice = itemView.findViewById(R.id.tv_invoices);
             circleImageView = itemView.findViewById(R.id.iv_store_profile_logo);
         }
     }

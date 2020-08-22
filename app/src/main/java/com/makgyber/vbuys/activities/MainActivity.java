@@ -62,6 +62,7 @@ import com.makgyber.vbuys.R;
 import com.makgyber.vbuys.fragments.BuyerMainFragment;
 import com.makgyber.vbuys.fragments.ChatFragment;
 import com.makgyber.vbuys.fragments.FeedbackFragment;
+import com.makgyber.vbuys.fragments.InvoiceListFragment;
 import com.makgyber.vbuys.fragments.OrderFragment;
 import com.makgyber.vbuys.fragments.ProfileFragment;
 
@@ -112,11 +113,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.action_home:
                         loadFragment(new BuyerMainFragment());
                         return true;
-//                    case R.id.action_feedback:
-//                        loadFragment(new FeedbackFragment());
-//                        return true;
                     case R.id.action_order:
-                        loadFragment(new OrderFragment());
+                        loadFragment(InvoiceListFragment.newInstance("buyer"));
                         return true;
                     case R.id.action_messages:
                         loadFragment(new ChatFragment());

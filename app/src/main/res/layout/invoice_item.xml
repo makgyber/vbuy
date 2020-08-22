@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/rl_chat_item"
@@ -9,19 +9,6 @@
         android:padding="10dp"
         android:background="?attr/selectableItemBackground"
         android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/iv_profile_photo2"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_store_mall_directory_pink_24dp"
-            app:civ_border_width="2dp"
-            android:layout_marginRight="20dp"
-            android:layout_centerVertical="true"
-            app:civ_border_color="#FF99FFCC"/>
-
-
 
         <LinearLayout
             android:layout_weight="1"

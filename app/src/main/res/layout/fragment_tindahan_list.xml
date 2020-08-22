@@ -10,6 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_item"
+            android:backgroundTint="@color/followers"
+            android:textSize="36sp"
+            android:gravity="center"
+            android:drawableTop="@drawable/ic_shopping_cart_white_24dp"
+            android:textAlignment="center"
+            android:paddingVertical="44dp"
+            android:layout_margin="24dp"
+            android:textColor="@color/colorPrimaryDarkSeller"
+            android:text="Add your stores here" />
 
     <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_tindahan"
         android:layout_width="match_parent"
