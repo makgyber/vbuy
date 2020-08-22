@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SellerChatActivity"
+        <activity android:name=".activities.InvoiceActivity"></activity>
+        <activity
+            android:name=".activities.SellerChatActivity"
             android:theme="@style/SellerTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

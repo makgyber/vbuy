@@ -131,13 +131,20 @@ public class SignInActivity extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userId", document.getDocuments().get(0).getId());
-                        editor.putString("email", document.getDocuments().get(0).get("email").toString());
-                        editor.putString("displayName", document.getDocuments().get(0).get("displayName").toString());
-                        editor.putString("phoneNumber",document.getDocuments().get(0).get("phoneNumber").toString());
-                        editor.putString("address", document.getDocuments().get(0).get("address").toString());
-                        editor.putString("facebook", document.getDocuments().get(0).get("facebook").toString());
-                        editor.putString("twitter", document.getDocuments().get(0).get("twitter").toString());
-                        editor.putString("photoUrl", document.getDocuments().get(0).get("photoUrl").toString());
+                        if ( null!=document.getDocuments().get(0).get("email") )
+                            editor.putString("email", document.getDocuments().get(0).get("email").toString());
+                        if ( null!=document.getDocuments().get(0).get("displayName") )
+                            editor.putString("displayName", document.getDocuments().get(0).get("displayName").toString());
+                        if ( null!=document.getDocuments().get(0).get("phoneNumber") )
+                            editor.putString("phoneNumber",document.getDocuments().get(0).get("phoneNumber").toString());
+                        if ( null!=document.getDocuments().get(0).get("address") )
+                            editor.putString("address", document.getDocuments().get(0).get("address").toString());
+                        if ( null!=document.getDocuments().get(0).get("facebook") )
+                            editor.putString("facebook", document.getDocuments().get(0).get("facebook").toString());
+                        if ( null!=document.getDocuments().get(0).get("twitter") )
+                            editor.putString("twitter", document.getDocuments().get(0).get("twitter").toString());
+                        if ( null!=document.getDocuments().get(0).get("photoUrl") )
+                            editor.putString("photoUrl", document.getDocuments().get(0).get("photoUrl").toString());
                         editor.putString("deliveryRadius", "5");
                         editor.commit();
                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
